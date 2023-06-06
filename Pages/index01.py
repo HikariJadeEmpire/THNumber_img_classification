@@ -4,7 +4,8 @@ import io
 
 import dash
 from dash.dependencies import Input, Output, State
-from dash import dcc, html, callback
+from dash import dcc, html, callback, dash_table
+from dash.exceptions import PreventUpdate
 
 import pandas as pd
 
@@ -40,13 +41,11 @@ layout = html.Div([
     ),
     html.Div(id='output-data-upload'),
 ]),
-
 ])
 )
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
-    global df
     decoded = base64.b64decode(content_string)
     try:
         if 'csv' in filename:
@@ -79,11 +78,12 @@ def parse_contents(contents, filename, date):
         Output('output-data-upload', 'children'),
         Input('upload-data', 'contents'),
         State('upload-data', 'filename'),
-        State('upload-data', 'last_modified'))
+        State('upload-data', 'last_modified')
+              )
+
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
-
