@@ -1,13 +1,22 @@
 import base64
-import datetime
-import io
+import os
+from flask import Flask, send_from_directory
+from urllib.parse import quote as urlquote
 
 import dash
-from dash.dependencies import Input, Output, State
-from dash import dcc, html, callback, dash_table
-from dash.exceptions import PreventUpdate
+from dash.dependencies import Input, Output
+from dash import dcc, html, callback
 
 import pandas as pd
+
+UPLOAD_DIRECTORY = "./Github/ThNumber_img_classification/uploaded"
+
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
+
+def download(path):
+    """Serve a file from the upload directory."""
+    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
 
 dash.register_page("home",  path='/Home',
 
@@ -39,51 +48,47 @@ layout = html.Div([
         # Allow multiple files to be uploaded
         multiple=True
     ),
-    html.Div(id='output-data-upload'),
+    html.Ul(id='output-data-upload'),
 ]),
 ])
 )
 
-def parse_contents(contents, filename, date):
-    content_type, content_string = contents.split(',')
-    decoded = base64.b64decode(content_string)
-    try:
-        if 'csv' in filename:
-            # Assume that the user uploaded a CSV file
-            df = pd.read_csv(
-                io.StringIO(decoded.decode('utf-8')))
-        elif 'xls' in filename:
-            # Assume that the user uploaded an excel file
-            df = pd.read_excel(io.BytesIO(decoded))
-    except Exception as e:
-        print(e)
-        return html.Div([
-            'There was an error processing this file.'
-        ])
+def save_file(name, content):
+    """Decode and store a file uploaded with Plotly Dash."""
+    name='df_00.csv'
+    data = content.encode("utf8").split(b";base64,")[1]
+    with open(os.path.join(UPLOAD_DIRECTORY, name), "wb") as fp:
+        fp.write(base64.decodebytes(data))
 
-    return html.Div([
-        html.H5(filename),
-        html.H6(datetime.datetime.fromtimestamp(date)),
-        html.Hr(),  # horizontal line
 
-        # For debugging, display the raw contents provided by the web browser
-        html.Div('Raw Content'),
-        html.Pre(contents[0:200] + '...', style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
-    ])
+def uploaded_files():
+    """List the files in the upload directory."""
+    files = []
+    for filename in os.listdir(UPLOAD_DIRECTORY):
+        path = os.path.join(UPLOAD_DIRECTORY, filename)
+        if os.path.isfile(path):
+            files.append(filename)
+    return files
 
-@callback(
-        Output('output-data-upload', 'children'),
-        Input('upload-data', 'contents'),
-        State('upload-data', 'filename'),
-        State('upload-data', 'last_modified')
+
+def file_download_link(filename):
+    """Create a Plotly Dash 'A' element that downloads a file from the app."""
+    location = "/download/{}".format(urlquote(filename))
+    return html.A(filename, href=location)
+
+@callback(Output('output-data-upload', 'children'),
+              Input('upload-data', 'filename'),
+              Input('upload-data', 'contents')
               )
+def update_output(uploaded_filenames, uploaded_file_contents):
+    """Save uploaded files and regenerate the file list."""
 
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [
-            parse_contents(c, n, d) for c, n, d in
-            zip(list_of_contents, list_of_names, list_of_dates)]
-        return children
+    if uploaded_filenames is not None and uploaded_file_contents is not None:
+        for name, data in zip(uploaded_filenames, uploaded_file_contents):
+            save_file(name, data)
+
+    files = uploaded_files()
+    if len(files) == 0:
+        return [html.Li("No files yet!")]
+    else:
+        return [html.Li(file_download_link(filename)) for filename in files]

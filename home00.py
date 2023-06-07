@@ -1,5 +1,6 @@
 from dash import Dash, html, dcc, callback
 import dash
+import dash_daq as daq
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -19,6 +20,7 @@ app.layout = html.Div([
 	dash.page_container,
 	 html.Div(children=[
             html.Div(children='Start your journey with Home page'),
+
      ])
 ])
 
