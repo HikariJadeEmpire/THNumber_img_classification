@@ -10,17 +10,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import classification_report 
+from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score
 
 import pandas as pd
 
 dash.register_page("Test",  path='/Testing',
 
-layout = html.Div([html.Hr(),html.Div(children=[      
-
-dcc.Store(id='store-target', storage_type='session'),
-dcc.Store(id='store-split', storage_type='session'),
-dcc.Store(id='output-cv2', storage_type='session'),
+layout = html.Div([html.Div(children=[
+    dcc.Store(id='store-target2', storage_type='local'),
+    dcc.Store(id='store-split2', storage_type='local'),
 
 html.P("Select Model ( For Testing )", className="control_label"),
     dcc.Dropdown(
@@ -47,8 +45,8 @@ def update_output(value):
         return f'You have selected : {str(value)} Model'
 
 @callback(Output('select-test-output2', 'children'),
-              Input('store-target', 'value'),
-              Input('store-split', 'value'),
+              Input('store-target2', 'value'),
+              Input('store-split2', 'value'),
               Input('select_test', 'value')
               )
 def update_output(cc,value,model):
@@ -72,7 +70,8 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            return f'Classification Report : {classification_report(y_test, y_pred)}'
+            sc = round(accuracy_score(y_test, y_pred)*100,1)
+            return f'Classification Report : {sc}'
             
         elif model == 'RandomForestClassifier' :
             steps = [
@@ -88,7 +87,8 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            return f'Classification Report : {classification_report(y_test, y_pred)}'
+            sc = round(accuracy_score(y_test, y_pred)*100,1)
+            return f'Classification Report : {sc}'
 
         elif model == 'ExtraTreesClassifier' :
             steps = [
@@ -104,7 +104,8 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            return f'Classification Report : {classification_report(y_test, y_pred)}'
+            sc = round(accuracy_score(y_test, y_pred)*100,1)
+            return f'Classification Report : {sc}'
 
         elif model == 'SGDClassifier' :
             steps = [
@@ -119,6 +120,7 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            return f'Classification Report : {classification_report(y_test, y_pred)}'
+            sc = round(accuracy_score(y_test, y_pred)*100,1)
+            return f'Classification Report : {sc}'
         else :
             raise PreventUpdate

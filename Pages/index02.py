@@ -21,15 +21,13 @@ import dash_daq as daq
 import pandas as pd
 
 df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
-ycol = None
 df = pd.DataFrame(
     OrderedDict([(name, col_data) for (name, col_data) in df.items()])
 )
 
 dash.register_page("Train",  path='/Training',
 
-layout = html.Div([html.Hr(),
-                   html.Div(children=[
+layout = html.Div([ html.Div(children=[
             html.H4(children='Select your training'),
             html.Div(children='select Y column & choose trainning number'),
             html.Hr(),
@@ -45,11 +43,12 @@ html.Hr(),
         id="select_target",
         options=[{'label':x, 'value':x} for x in df.columns],
         multi=False,
-        value=ycol,
-        clearable=False,        
+        value=None,
+        clearable=False,
+        persistence="local"        
 ),
 html.Div(id='dd-output-container'),
-dcc.Store(id='store-target', storage_type='session'),
+dcc.Store(id='store-target', storage_type='local'),
 
 html.Hr(),
 html.Div(children='select your training number'),
@@ -57,7 +56,7 @@ html.Div(children='select your training number'),
 html.Div([daq.LEDDisplay(
         id='my-LED-display-1',
         label="Trainning splits",
-        value=100
+        value=100,
     ),
     dcc.Slider(
         id='my-LED-display-slider-1',
@@ -66,7 +65,7 @@ html.Div([daq.LEDDisplay(
         step=10,
         value=100
     )])
-]), dcc.Store(id='store-split', storage_type='session'),
+]), dcc.Store(id='store-split', storage_type='local'),
 html.Hr(),
 
 html.Div(children='select tools for Cross Validation'),
@@ -75,12 +74,13 @@ html.Div(dcc.Dropdown(
     options = ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier'],
     multi = True ,
     value = None ,
-    clearable = True
+    clearable = False,
+    persistence="local"
 
 ), style={'padding': 10, 'flex': 1}), 
 html.Div(children='Please select the models',id='cvscore'),
-dcc.Store(id='output-cv', storage_type='session'),
-dcc.Store(id='output-cv2', storage_type='session'),
+dcc.Store(id='output-cv', storage_type='local'),
+dcc.Store(id='output-cv2', storage_type='local'),
 html.Hr(),
 
  html.Div(children=[
@@ -90,7 +90,7 @@ html.Hr(),
 
             dcc.Graph(
                 id='id2',
-                figure = {}
+                figure = {},
             )
         ], style={'padding': 10, 'flex': 1}),
 
@@ -156,6 +156,7 @@ def update_output(value):
 )
 def update_led(value):
     return str(value)
+
 
 @callback(
     Output('output-cv2', 'children'),

@@ -1,10 +1,15 @@
-from dash import Dash, html, dcc, callback
+from dash import Dash, html, dcc
 import dash
-import dash_daq as daq
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True, use_pages=True)
+app = Dash(
+    __name__,
+    use_pages=True,
+    prevent_initial_callbacks=True,
+    suppress_callback_exceptions=True,
+    external_stylesheets=external_stylesheets
+)
 
 app.layout = html.Div([
 	html.H1('Welcome to ML classification APP.'),
@@ -16,9 +21,9 @@ app.layout = html.Div([
             for page in dash.page_registry.values()
         ]
     ),
-
-	dash.page_container,
-	 html.Div(children=[
+    html.Hr(),
+	dash.page_container,html.Hr(),
+	html.Div(children=[
             html.Div(children='Start your journey with Home page'),
 
      ])
