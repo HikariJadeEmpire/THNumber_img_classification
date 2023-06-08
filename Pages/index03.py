@@ -429,6 +429,7 @@ def update_output(targ,value,model):
             for i in range(y_pred.shape[1]):
                 y_true = y_onehot.iloc[:, i]
                 y_score = y_pred[:, i]
+                print(i)
 
                 fpr, tpr, _ = roc_curve(y_true, y_score)
                 auc_score = roc_auc_score(y_true, y_score)
