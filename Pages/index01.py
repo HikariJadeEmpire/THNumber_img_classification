@@ -73,7 +73,7 @@ def uploaded_files():
 
 def file_download_link(filename):
     """Create a Plotly Dash 'A' element that downloads a file from the app."""
-    location = "/download/{}".format(urlquote(filename))
+    location = "./Github/ThNumber_img_classification/uploaded/{}".format(urlquote(filename))
     return html.A(filename, href=location)
 
 @callback(Output('output-data-upload', 'children'),
