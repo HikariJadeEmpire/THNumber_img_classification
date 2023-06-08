@@ -32,6 +32,9 @@ layout = html.Div([ html.Div(children=[
             html.Div(children='select Y column & choose trainning number'),
             html.Hr(),
 
+dcc.Store(id='store-target', storage_type='local'),
+dcc.Store(id='store-split', storage_type='local'),
+
             html.Div([
         dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns],page_size=10, id='tbl')
     ]),
@@ -44,11 +47,9 @@ html.Hr(),
         options=[{'label':x, 'value':x} for x in df.columns],
         multi=False,
         value=None,
-        clearable=False,
-        persistence="local"        
+        clearable=True       
 ),
 html.Div(id='dd-output-container'),
-dcc.Store(id='store-target', storage_type='local'),
 
 html.Hr(),
 html.Div(children='select your training number'),
@@ -65,7 +66,7 @@ html.Div([daq.LEDDisplay(
         step=10,
         value=100
     )])
-]), dcc.Store(id='store-split', storage_type='local'),
+]), 
 html.Hr(),
 
 html.Div(children='select tools for Cross Validation'),
@@ -74,10 +75,9 @@ html.Div(dcc.Dropdown(
     options = ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier'],
     multi = True ,
     value = None ,
-    clearable = False,
-    persistence="local"
+    clearable = True
+), style={'padding': 10, 'flex': 1}),
 
-), style={'padding': 10, 'flex': 1}), 
 html.Div(children='Please select the models',id='cvscore'),
 dcc.Store(id='output-cv', storage_type='local'),
 dcc.Store(id='output-cv2', storage_type='local'),
@@ -95,7 +95,6 @@ html.Hr(),
         ], style={'padding': 10, 'flex': 1}),
 
 ])
-
 )
 
 @callback(

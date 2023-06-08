@@ -2,6 +2,7 @@ import dash
 from dash import dcc, html, callback
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
+from collections import OrderedDict
 
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -14,9 +15,15 @@ from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_sc
 
 import pandas as pd
 
+df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+df = pd.DataFrame(
+    OrderedDict([(name, col_data) for (name, col_data) in df.items()])
+)
+
 dash.register_page("Test",  path='/Testing',
 
 layout = html.Div([html.Div(children=[
+
     dcc.Store(id='store-target2', storage_type='local'),
     dcc.Store(id='store-split2', storage_type='local'),
 
@@ -30,11 +37,30 @@ html.P("Select Model ( For Testing )", className="control_label"),
 ),
 html.Div(children='Please select model',id='select-test-output'),
 html.Hr(),
+html.P("Select Target (Y column)", className="control_label"),
+    dcc.Dropdown(
+        id="select_target2",
+        options=[{'label':x, 'value':x} for x in df.columns],
+        multi=False,
+        value=None,
+        clearable=True       
+),
+html.Div(id='output-target'),
+html.Hr(),
 html.Div(children='Please select taget model and training split first',id='select-test-output2'),
 
 ])
 ])
 )
+
+@callback(Output('store-target2', 'value'),
+          Output('output-target', 'value'),
+          Input('select_target2', 'value'))
+def clean_data(cc):
+    if cc is not None:
+        return cc
+    else :
+        raise PreventUpdate
 
 @callback(
     Output('select-test-output', 'children'),

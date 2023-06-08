@@ -13,7 +13,6 @@ app = Dash(
 
 app.layout = html.Div([
 	html.H1('Welcome to ML classification APP.'),
-
     html.Div(
         [ html.Div(dcc.Link(
                     f"{page['name']} - {page['path']}", href=page["relative_path"])
