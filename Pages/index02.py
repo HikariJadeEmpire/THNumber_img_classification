@@ -3,6 +3,8 @@ from dash.dependencies import Input, Output
 from dash import dcc, html, callback
 from dash import dash_table
 from collections import OrderedDict
+from dash.exceptions import PreventUpdate
+import plotly.express as px
 
 from sklearn.model_selection import train_test_split
 
@@ -13,6 +15,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 
+from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score
 
 import dash_daq as daq
 import pandas as pd
@@ -46,7 +49,8 @@ html.Hr(),
         clearable=False,        
 ),
 html.Div(id='dd-output-container'),
-dcc.Store(id='store-target'),
+dcc.Store(id='store-target', storage_type='session'),
+
 html.Hr(),
 html.Div(children='select your training number'),
 
@@ -62,27 +66,74 @@ html.Div([daq.LEDDisplay(
         step=10,
         value=100
     )])
-]), dcc.Store(id='store-split'),
+]), dcc.Store(id='store-split', storage_type='session'),
 html.Hr(),
 
 html.Div(children='select tools for Cross Validation'),
-dcc.Dropdown(
+html.Div(dcc.Dropdown(
     id="selectcv",
     options = ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier'],
     multi = True ,
     value = None ,
     clearable = True
 
-), 
-html.Div(children='Cross validation score',id='cvscore'),
-dcc.Store(id='output-cv'),
-dcc.Store(id='output-cv2'),
+), style={'padding': 10, 'flex': 1}), 
+html.Div(children='Please select the models',id='cvscore'),
+dcc.Store(id='output-cv', storage_type='session'),
+dcc.Store(id='output-cv2', storage_type='session'),
 html.Hr(),
+
+ html.Div(children=[
+            html.H3(children='Comparing the Accuracy Scores of Different Models (Bar Plot)'),
+
+            html.Div(children='Select a model'),
+
+            dcc.Graph(
+                id='id2',
+                figure = {}
+            )
+        ], style={'padding': 10, 'flex': 1}),
 
 ])
 
 )
 
+@callback(
+    Output('cvscore', 'children'),
+    Input('output-cv', 'value'),
+    Input('output-cv2', 'children')
+)
+def update_output(data,children):
+    if (data is not None) and (children != []) :
+        scorr = {}
+        for i in data:
+            for j in children:
+                if i==j:
+                    scorr[i]=data[i]
+        return f'Accuracy score : {scorr}'
+    else :
+        raise PreventUpdate
+
+@callback(Output('id2', 'figure'),
+          Input('output-cv', 'value'),
+          Input('output-cv2', 'children')
+)
+def upd_fig(cc,select):
+    if (cc is not None) and (select != []):
+        scor = {}
+        for i in cc:
+            for j in select:
+                if i==j:
+                    scor[i]=cc[i]
+        cc = {'model':scor.keys(),'acc_score':scor.values()}
+        cc = pd.DataFrame(cc)
+        figure = px.bar(cc,x='acc_score',y='model',
+             color='acc_score',
+             labels={'acc_score':'Accuracy score'}, height=400)
+        figure.update_layout(transition_duration=1)
+        return figure
+    else :
+        raise PreventUpdate
 
 @callback(Output('store-target', 'value'),
           Input('select_target', 'value'))
@@ -90,8 +141,7 @@ def clean_data(cc):
     if cc is not None:
         return cc
     else :
-        return None
-
+        raise PreventUpdate
 
 @callback(
     Output('my-LED-display-1', 'value'),
@@ -115,21 +165,6 @@ def update_output(value):
     if value is not None :
         return value
 
-@callback(
-    Output('cvscore', 'children'),
-    Input('output-cv', 'data'),
-    Input('output-cv2', 'children')
-)
-def update_output(data,children):
-    if (data is not None) and (children != []) :
-        scor = {}
-        for i in data:
-            for j in children:
-                if i==j:
-                    scor[i]=data[i]/1000
-        return f'CV training score : {scor}'
-    else :
-        return f'Please select your training model'
 
 @callback(
     Output('dd-output-container', 'children'),
@@ -138,7 +173,7 @@ def update_output(data,children):
 def update_output(value):
     return f'You have select : {value}'
 
-@callback(Output('output-cv', 'data'),
+@callback(Output('output-cv', 'value'),
               Input('store-target', 'value'),
               Input('store-split', 'value')
               )
@@ -164,9 +199,10 @@ def update_output(cc,value):
                             ]
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
-                sc = pipeline.score(X_train, y_train)
+                y_pred = pr.predict(X_test)
+                sc = round(accuracy_score(y_test, y_pred)*100,1)
 
-                score['LogistcRegression']=sc*1000
+                score['LogistcRegression']=sc
             elif i == 'RandomForestClassifier' :
                 steps = [
                 ('scalar', MinMaxScaler()),
@@ -180,10 +216,10 @@ def update_output(cc,value):
                             ]
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
-                sc = pipeline.score(X_train, y_train)
+                y_pred = pr.predict(X_test)
+                sc = round(accuracy_score(y_test, y_pred)*100,1)
 
-                score['RandomForestClassifier']=sc*1000
-            elif i == 'ExtraTreesClassifier' :
+                score['RandomForestClassifier']=sc
                 steps = [
                 ('scalar', MinMaxScaler()),
                 ('ExtraTreesClassifier',ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
@@ -196,9 +232,10 @@ def update_output(cc,value):
                             ]
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
-                sc = pipeline.score(X_train, y_train)
+                y_pred = pr.predict(X_test)
+                sc = round(accuracy_score(y_test, y_pred)*100,1)
 
-                score['ExtraTreesClassifier']=sc*1000
+                score['ExtraTreesClassifier']=sc
             elif i == 'SGDClassifier' :
                 steps = [
                 ('scalar', MinMaxScaler()),
@@ -211,8 +248,9 @@ def update_output(cc,value):
                             ]
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
-                sc = pipeline.score(X_train, y_train)
+                y_pred = pr.predict(X_test)
+                sc = round(accuracy_score(y_test, y_pred)*100,1)
 
-                score['SGDClassifier']=sc*1000
+                score['SGDClassifier']=sc
         return score
 

@@ -1,6 +1,7 @@
 import dash
 from dash import dcc, html, callback
 from dash.dependencies import Input, Output
+from dash.exceptions import PreventUpdate
 
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -9,6 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import classification_report 
 
 import pandas as pd
 
@@ -16,7 +18,9 @@ dash.register_page("Test",  path='/Testing',
 
 layout = html.Div([html.Hr(),html.Div(children=[      
 
-dcc.Store(id='output-cv3'),
+dcc.Store(id='store-target', storage_type='session'),
+dcc.Store(id='store-split', storage_type='session'),
+dcc.Store(id='output-cv2', storage_type='session'),
 
 html.P("Select Model ( For Testing )", className="control_label"),
     dcc.Dropdown(
@@ -26,7 +30,9 @@ html.P("Select Model ( For Testing )", className="control_label"),
         value=None,
         clearable=True,        
 ),
-html.Div(id='select-test-output'),
+html.Div(children='Please select model',id='select-test-output'),
+html.Hr(),
+html.Div(children='Please select taget model and training split first',id='select-test-output2'),
 
 ])
 ])
@@ -40,7 +46,7 @@ def update_output(value):
     if value is not None :
         return f'You have selected : {str(value)} Model'
 
-@callback(Output('output-cv3', 'data'),
+@callback(Output('select-test-output2', 'children'),
               Input('store-target', 'value'),
               Input('store-split', 'value'),
               Input('select_test', 'value')
@@ -66,6 +72,7 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
+            return f'Classification Report : {classification_report(y_test, y_pred)}'
             
         elif model == 'RandomForestClassifier' :
             steps = [
@@ -81,6 +88,7 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
+            return f'Classification Report : {classification_report(y_test, y_pred)}'
 
         elif model == 'ExtraTreesClassifier' :
             steps = [
@@ -96,6 +104,7 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
+            return f'Classification Report : {classification_report(y_test, y_pred)}'
 
         elif model == 'SGDClassifier' :
             steps = [
@@ -110,3 +119,6 @@ def update_output(cc,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
+            return f'Classification Report : {classification_report(y_test, y_pred)}'
+        else :
+            raise PreventUpdate
