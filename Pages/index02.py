@@ -20,10 +20,15 @@ from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_sc
 import dash_daq as daq
 import pandas as pd
 
-df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
-df = pd.DataFrame(
-    OrderedDict([(name, col_data) for (name, col_data) in df.items()])
-)
+try :
+    df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+    df = pd.DataFrame(
+        OrderedDict([(name, col_data) for (name, col_data) in df.items()])
+    )
+    op = [{'label':x, 'value':x} for x in df.columns]
+except Exception as e :
+    df = None
+    op = None
 
 dash.register_page("Train",  path='/Training',
 
@@ -35,16 +40,11 @@ layout = html.Div([ html.Div(children=[
 dcc.Store(id='store-target', storage_type='local'),
 dcc.Store(id='store-split', storage_type='local'),
 
-            html.Div([
-        dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns],page_size=10, id='tbl')
-    ]),
-
-html.Hr(),
 
     html.P("Select Target (Y column)", className="control_label"),
     dcc.Dropdown(
         id="select_target",
-        options=[{'label':x, 'value':x} for x in df.columns],
+        options = op ,
         multi=False,
         value=None,
         clearable=True       
@@ -96,6 +96,8 @@ html.Hr(),
 
 ])
 )
+
+##################################################################################
 
 @callback(
     Output('cvscore', 'children'),
@@ -173,18 +175,25 @@ def update_output(value):
 def update_output(value):
     return f'You have select : {value}'
 
+############################################################
+
 @callback(Output('output-cv', 'value'),
               Input('store-target', 'value'),
               Input('store-split', 'value')
               )
 def update_output(cc,value):
     if ( cc is not None ) and ( value != '100' ) :
-        df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+        try :
+            df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            
+            x = df.drop(columns=cc)
+            y = df[cc]
+            tts = 1-(int(value)/100)
+            X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
 
-        x = df.drop(columns=cc)
-        y = df[cc]
-        tts = 1-(int(value)/100)
-        X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+        except Exception as e :
+            df = None
+            X_train, X_test, y_train, y_test = None
 
         score = {}
         for i in ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier']:

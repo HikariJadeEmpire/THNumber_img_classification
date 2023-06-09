@@ -14,6 +14,7 @@ from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
+from sklearn.multiclass import OneVsRestClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
@@ -22,10 +23,15 @@ from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_sc
 
 import pandas as pd
 
-df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
-df = pd.DataFrame(
-    OrderedDict([(name, col_data) for (name, col_data) in df.items()])
-)
+try :
+    df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+    df = pd.DataFrame(
+        OrderedDict([(name, col_data) for (name, col_data) in df.items()])
+    )
+    op = [{'label':x, 'value':x} for x in df.columns]
+except Exception as e :
+    df = None
+    op = None
 
 dash.register_page("Test",  path='/Testing',
 
@@ -46,7 +52,7 @@ html.Hr(),
 html.P("Select Target (Y column)", className="control_label"),
     dcc.Dropdown(
         id="select_target2",
-        options=[{'label':x, 'value':x} for x in df.columns],
+        options = op ,
         multi=False,
         value=None,
         clearable=True       
@@ -110,6 +116,8 @@ dcc.Graph(id="roc-grph"),
 ])
 ])
 )
+
+##################################################################################
 
 @callback(Output('output-target', 'children'),
           Input('select_target2', 'value'))
@@ -203,12 +211,17 @@ def update_output(value):
               )
 def update_output(targ,value,model):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
-        df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
-        
-        x = df.drop(columns=targ)
-        y = df[targ]
-        tts = 1-(int(value)/100)
-        X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+        try :
+            df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            
+            x = df.drop(columns=targ)
+            y = df[targ]
+            tts = 1-(int(value)/100)
+            X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+
+        except Exception as e :
+            df = None
+            X_train, X_test, y_train, y_test = None
 
         scora = {}
 
@@ -313,22 +326,26 @@ def update_output(targ,value,model):
               )
 def update_output(targ,value,model):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
-        df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
-        
-        x = df.drop(columns=targ)
-        y = df[targ]
-
-        tts = 1-(int(value)/100)
-        X , y = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+        try :
+            df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            
+            x = df.drop(columns=targ)
+            y = df[targ]
+            tts = 1-(int(value)/100)
+            X , y = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+            
+        except Exception as e :
+            df = None
+            X , y = None
 
         if model == 'LogistcRegression':
             steps = [
                 ('scalar', MinMaxScaler()),
-                ('LogisticRegression',LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                ('LogisticRegression',OneVsRestClassifier(LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
                             intercept_scaling=1, l1_ratio=None, max_iter=1000,
                             multi_class='auto', n_jobs=None, penalty='l2',
                             random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
-                            warm_start=False))
+                            warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             pipeline.fit(X,y)
@@ -364,13 +381,13 @@ def update_output(targ,value,model):
         elif model == 'RandomForestClassifier' :
             steps = [
                 ('scalar', MinMaxScaler()),
-                ('Randomforest',RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                ('Randomforest',OneVsRestClassifier(RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
                             criterion='gini', max_depth=None, max_features='sqrt',
                             max_leaf_nodes=None, max_samples=None,
                             min_impurity_decrease=0.0, min_samples_leaf=1,
                             min_samples_split=2, min_weight_fraction_leaf=0.0,
                             n_estimators=100, n_jobs=-1, oob_score=False,
-                            random_state=123, verbose=0, warm_start=False))
+                            random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             pipeline.fit(X,y)
@@ -406,13 +423,13 @@ def update_output(targ,value,model):
         elif model == 'ExtraTreesClassifier' :
             steps = [
                 ('scalar', MinMaxScaler()),
-                ('ExtraTreesClassifier',ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
+                ('ExtraTreesClassifier',OneVsRestClassifier(ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
                         criterion='gini', max_depth=None, max_features='sqrt',
                         max_leaf_nodes=None, max_samples=None,
                         min_impurity_decrease=0.0, min_samples_leaf=1,
                         min_samples_split=2, min_weight_fraction_leaf=0.0,
                         n_estimators=100, n_jobs=-1, oob_score=False,
-                        random_state=123, verbose=0, warm_start=False))
+                        random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             pipeline.fit(X,y)
@@ -449,12 +466,12 @@ def update_output(targ,value,model):
         elif model == 'SGDClassifier' :
             steps = [
                 ('scalar', MinMaxScaler()),
-                ('SGDClassifier',SGDClassifier(alpha=0.0001, average=False, class_weight=None,
+                ('SGDClassifier',OneVsRestClassifier(SGDClassifier(alpha=0.0001, average=False, class_weight=None,
                early_stopping=False, epsilon=0.1, eta0=0.001, fit_intercept=True,
                l1_ratio=0.15, learning_rate='optimal', loss='hinge',
                max_iter=1000, n_iter_no_change=5, n_jobs=-1, penalty='l2',
                power_t=0.5, random_state=123, shuffle=True, tol=0.001,
-               validation_fraction=0.1, verbose=0, warm_start=False))
+               validation_fraction=0.1, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             pipeline.fit(X,y)

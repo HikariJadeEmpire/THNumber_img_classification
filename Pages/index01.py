@@ -51,6 +51,8 @@ layout = html.Div([
 ])
 )
 
+##################################################################################
+
 def save_file(name, content):
     """Decode and store a file uploaded with Plotly Dash."""
     name='df_00.csv'
@@ -71,7 +73,7 @@ def uploaded_files():
 
 def file_download_link(filename):
     """Create a Plotly Dash 'A' element that downloads a file from the app."""
-    location = "./Github/ThNumber_img_classification/uploaded/{}".format(urlquote(filename))
+    location = "./download/{}".format(urlquote(filename))
     return html.A(filename, href=location)
 
 @callback(Output('output-data-upload', 'children'),
