@@ -112,7 +112,7 @@ html.Div([
 dcc.Store(id='store-score', storage_type='local'),
 html.Hr(),
 html.H3(children='Multiclass ROC Curve'),
-dcc.Graph(id="roc-grph"),
+dcc.Graph(id="roc-grph", figure = {}),
 
 ])
 ])
@@ -370,22 +370,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            fig=fig
             return fig
             
         elif model == 'RandomForestClassifier' :
@@ -417,22 +418,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            fig=fig
             return fig
             
         elif model == 'ExtraTreesClassifier' :
@@ -464,22 +466,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            fig=fig
             return fig
             
 
@@ -511,22 +514,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            fig=fig
             return fig
             
         
