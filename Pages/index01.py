@@ -22,8 +22,6 @@ dash.register_page("home",  path='/Home',
 
 layout = html.Div([
 
-        html.Hr(),
-
         html.Div(children=[
             html.H4(children='Import your DATA (.csv)'),
 
