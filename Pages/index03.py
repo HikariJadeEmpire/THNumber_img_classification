@@ -379,6 +379,7 @@ def update_output(targ,value,model):
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
+        
             fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
@@ -427,6 +428,7 @@ def update_output(targ,value,model):
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
+
             fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
