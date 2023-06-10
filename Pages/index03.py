@@ -24,6 +24,14 @@ from sklearn.preprocessing import label_binarize
 
 import pandas as pd
 
+def blank_fig():
+    fig = go.Figure(go.Scatter())
+    fig.update_layout(template = None)
+    fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+    fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+
+    return fig
+
 try :
     df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
     df = pd.DataFrame(
@@ -112,7 +120,7 @@ html.Div([
 dcc.Store(id='store-score', storage_type='local'),
 html.Hr(),
 html.H3(children='Multiclass ROC Curve'),
-dcc.Graph(id="roc-grph"),
+dcc.Graph(id="roc-grph", figure = blank_fig(), style={"width": "90%", "display": "inline-block"} ),
 
 ])
 ])
@@ -325,7 +333,7 @@ def update_output(targ,value,model):
               Input('store-split2', 'value'),
               Input('select_test', 'value')
               )
-def update_output(targ,value,model):
+def update_roc(targ,value,model):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
@@ -333,7 +341,7 @@ def update_output(targ,value,model):
             x = df.drop(columns=targ)
             y = df[targ]
 
-            y = preprocessing.label_binarize( y , classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] )
+            y = pd.get_dummies(y).to_numpy()
             n_classes = y.shape[1]
 
             tts = 1-(int(value)/100)
@@ -370,22 +378,25 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+
+        
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            #fig.show()
             return fig
             
         elif model == 'RandomForestClassifier' :
@@ -400,7 +411,7 @@ def update_output(targ,value,model):
                             random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
-            y_score = pipeline.fit(X_train,y_train).decision_function(X_test)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
             # Compute ROC curve and ROC area for each class
             fpr = dict()
             tpr = dict()
@@ -417,22 +428,24 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            
             return fig
             
         elif model == 'ExtraTreesClassifier' :
@@ -447,7 +460,7 @@ def update_output(targ,value,model):
                         random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
-            y_score = pipeline.fit(X_train,y_train).decision_function(X_test)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
             # Compute ROC curve and ROC area for each class
             fpr = dict()
             tpr = dict()
@@ -464,22 +477,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            
             return fig
             
 
@@ -511,22 +525,23 @@ def update_output(targ,value,model):
             # Plot of a ROC curve for a specific class
 
             fig = go.Figure()
-            fig.add_shape(
+            fig = fig.add_shape(
                 type='line', line=dict(dash='dash'),
                 x0=0, x1=1, y0=0, y1=1
                 )
-            fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
+            fig = fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
             for i in range(n_classes):
                 name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
                 fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-            fig.update_layout(
+            fig = fig.update_layout(
                 xaxis_title='False Positive Rate',
                 yaxis_title='True Positive Rate',
                 yaxis=dict(scaleanchor="x", scaleratio=1),
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
+            
             return fig
             
         
