@@ -411,7 +411,7 @@ def update_roc(targ,value,model):
                             random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
-            y_score = pipeline.fit(X_train,y_train).decision_function(X_test)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
             # Compute ROC curve and ROC area for each class
             fpr = dict()
             tpr = dict()
@@ -445,7 +445,7 @@ def update_roc(targ,value,model):
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
-            fig=fig
+            
             return fig
             
         elif model == 'ExtraTreesClassifier' :
@@ -460,7 +460,7 @@ def update_roc(targ,value,model):
                         random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
-            y_score = pipeline.fit(X_train,y_train).decision_function(X_test)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
             # Compute ROC curve and ROC area for each class
             fpr = dict()
             tpr = dict()
@@ -493,7 +493,7 @@ def update_roc(targ,value,model):
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
-            fig=fig
+            
             return fig
             
 
@@ -541,7 +541,7 @@ def update_roc(targ,value,model):
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
-            fig=fig
+            
             return fig
             
         
