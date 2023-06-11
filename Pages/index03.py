@@ -396,7 +396,7 @@ def update_roc(targ,value,model):
                 xaxis=dict(constrain='domain'),
                 width=700, height=500
             )
-            #fig.show()
+            fig.show()
             return fig
             
         elif model == 'RandomForestClassifier' :
