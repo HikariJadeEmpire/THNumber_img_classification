@@ -166,6 +166,8 @@ def update_led(value):
 def update_output(value):
     if value is not None :
         return value
+    else :
+        raise PreventUpdate
 
 
 @callback(
@@ -262,4 +264,5 @@ def update_output(cc,value):
 
                 score['SGDClassifier']=sc
         return score
-
+    else :
+        raise PreventUpdate

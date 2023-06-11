@@ -110,8 +110,7 @@ html.Div([
 
 dcc.Store(id='store-score', storage_type='local'),
 html.Hr(),
-html.H3(children='Multiclass ROC Curve'),
-dcc.Graph(id="roc-grph", figure = go.Figure()),
+html.Div(children="The ROC Graph will plot after selecting Y taget and training split",id="roc-grph"),
 
 ])
 ])
@@ -307,7 +306,7 @@ def update_output(targ,value,model):
 ###################   Graph   ####################
 ##################################################
 
-@callback(Output('roc-grph', 'figure'),
+@callback(Output('roc-grph', 'children'),
               Input('select_target2', 'value'),
               Input('slider2', 'value'),
               Input('select_test', 'value'),
@@ -457,4 +456,5 @@ def update_roc(targ,value,model,fg):
             width=700, height=500
         )
             
-        return fig.show()
+        return html.Div([html.H3(children='Multiclass ROC Curve'),
+                dcc.Graph(figure = fig)])

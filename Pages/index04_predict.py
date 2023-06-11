@@ -30,9 +30,11 @@ layout = html.Div([
             'margin': '10px'
         },
         
-        multiple=False
+        multiple=True
     ),
     html.Div(id='output-image-upload'),
+    html.Hr(),
+    html.H3(children='Prediction result (By the best of our model)'),
     
 ])
 )
