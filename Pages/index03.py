@@ -1,6 +1,6 @@
 import dash
 from dash import dcc, html, callback
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from collections import OrderedDict
 import dash_daq as daq
@@ -19,18 +19,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score, auc
-from sklearn.preprocessing import label_binarize
+from sklearn.metrics import roc_curve, recall_score, precision_score,accuracy_score, auc
 
 import pandas as pd
-
-def blank_fig():
-    fig = go.Figure(go.Scatter())
-    fig.update_layout(template = None)
-    fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
-    fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
-
-    return fig
 
 try :
     df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
@@ -120,7 +111,7 @@ html.Div([
 dcc.Store(id='store-score', storage_type='local'),
 html.Hr(),
 html.H3(children='Multiclass ROC Curve'),
-dcc.Graph(id="roc-grph", figure = blank_fig(), style={"width": "90%", "display": "inline-block"} ),
+dcc.Graph(id="roc-grph", figure = go.Figure()),
 
 ])
 ])
@@ -249,10 +240,6 @@ def update_output(targ,value,model):
             sc = round(precision_score(y_test, y_pred, average='macro'),2)
             sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
             sc2 = round(accuracy_score(y_test, y_pred)*100,1)
-
-            scora['precision'] = sc
-            scora['recall'] = sc1
-            scora['accuracy'] = sc2
             
         elif model == 'RandomForestClassifier' :
             steps = [
@@ -272,10 +259,6 @@ def update_output(targ,value,model):
             sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
             sc2 = round(accuracy_score(y_test, y_pred)*100,1)
 
-            scora['precision'] = sc
-            scora['recall'] = sc1
-            scora['accuracy'] = sc2
-
         elif model == 'ExtraTreesClassifier' :
             steps = [
                 ('scalar', MinMaxScaler()),
@@ -294,10 +277,6 @@ def update_output(targ,value,model):
             sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
             sc2 = round(accuracy_score(y_test, y_pred)*100,1)
 
-            scora['precision'] = sc
-            scora['recall'] = sc1
-            scora['accuracy'] = sc2
-
         elif model == 'SGDClassifier' :
             steps = [
                 ('scalar', MinMaxScaler()),
@@ -315,12 +294,12 @@ def update_output(targ,value,model):
             sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
             sc2 = round(accuracy_score(y_test, y_pred)*100,1)
 
-            scora['precision'] = sc
-            scora['recall'] = sc1
-            scora['accuracy'] = sc2
-
         else :
             raise PreventUpdate
+        
+        scora['precision'] = sc
+        scora['recall'] = sc1
+        scora['accuracy'] = sc2
         
         return scora
 
@@ -329,11 +308,12 @@ def update_output(targ,value,model):
 ##################################################
 
 @callback(Output('roc-grph', 'figure'),
-              Input('store-target2', 'value'),
-              Input('store-split2', 'value'),
-              Input('select_test', 'value')
+              Input('select_target2', 'value'),
+              Input('slider2', 'value'),
+              Input('select_test', 'value'),
+              State('roc-grph', 'figure')
               )
-def update_roc(targ,value,model):
+def update_roc(targ,value,model,fg):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
@@ -348,8 +328,7 @@ def update_roc(targ,value,model):
             X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
             
         except Exception as e :
-            df = None
-            X_train, X_test, y_train, y_test = None
+            raise PreventUpdate
 
         if model == 'LogistcRegression':
             steps = [
@@ -458,17 +437,18 @@ def update_roc(targ,value,model):
         
         # Plot of a ROC curve for a specific class
 
-        fig = go.Figure()
-        fig = fig.add_shape(
+        fig = go.Figure(fg)
+        fig.add_shape(
             type='line', line=dict(dash='dash'),
             x0=0, x1=1, y0=0, y1=1
             )
+
         fig.add_trace(go.Scatter(x=fpr["macro"], y=tpr["macro"], name="macro-average ROC curve (area={0:0.2f})".format(roc_auc["macro"]), mode='lines'))
 
         for i in range(n_classes):
             name = f"ROC curve of class {i} (AUC={roc_auc[i]:.2f})"
             fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], name=name, mode='lines'))
-
+        
         fig.update_layout(
             xaxis_title='False Positive Rate',
             yaxis_title='True Positive Rate',
@@ -477,4 +457,4 @@ def update_roc(targ,value,model):
             width=700, height=500
         )
             
-        return fig
+        return fig.show()
