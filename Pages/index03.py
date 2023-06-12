@@ -482,6 +482,6 @@ def update_roc(targ,value,model,fg):
             
         return html.Div([html.H3(children='Multiclass ROC Curve'),
                          html.P(children=model),
-                        dcc.Graph(figure = fig ,style={'margin-left':'20px','text-align':'center'})],
+                        dcc.Graph(figure = fig ,style={'margin-left':'140px','text-align':'center'})],
                         style={'margin-left':'20px','text-align':'center'}
                         )
