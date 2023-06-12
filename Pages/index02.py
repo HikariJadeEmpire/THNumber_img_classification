@@ -16,7 +16,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 
-from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score, auc
+from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score, auc, f1_score
 
 import dash_daq as daq
 import pandas as pd
@@ -111,6 +111,7 @@ dcc.Store(id='output-cv2', storage_type='local'),
 dcc.Store(id='acc', storage_type='local'),
 dcc.Store(id='precision0', storage_type='local'),
 dcc.Store(id='recall0', storage_type='local'),
+dcc.Store(id='f1', storage_type='local'),
 ])
 
 ], width=4 ),
@@ -145,14 +146,16 @@ def update_output(data,children):
           Input('acc', 'value'),
           Input('precision0', 'value'),
           Input('recall0', 'value'),
+          Input('f1', 'value'),
           Input('output-cv2', 'children')
 )
-def upd_fig(cc,pre,rec,select):
+def upd_fig(cc,pre,rec,f1,select):
     if (cc is not None) and (select is not None):
 
         ac_scor = {}
         pre_scor = {}
         re_scor = {}
+        f1_scor = {}
 
         for i in cc:
             for j in select:
@@ -160,13 +163,19 @@ def upd_fig(cc,pre,rec,select):
                     ac_scor[i]=cc[i]
                     pre_scor[i]=pre[i]
                     re_scor[i]=rec[i]
+                    f1_scor[i]=f1[i]
 
-        cc = {'model':ac_scor.keys(),'accuracy_score':ac_scor.values(), 'precision_score':pre_scor.values(), 'recall_score':re_scor.values()}
+        cc = {'model':ac_scor.keys(),'accuracy_score':ac_scor.values(), 'precision_score':pre_scor.values(), 'recall_score':re_scor.values(), 'f1_score(macro)':f1_scor.values()}
         cc = pd.DataFrame(cc)
 
-        figure = px.bar(cc,x=['accuracy_score','precision_score','recall_score'],y='model', barmode="group"
-                        , text_auto='.2s'
-             , height=400)
+        figure = px.bar(cc,x=['accuracy_score','precision_score','recall_score','f1_score(macro)'],y='model', barmode="group"
+                        , text_auto='.2s',title="Comparing model score",
+                        labels={
+                     "model": "Classification Model",
+                     "value": "Score",
+                     "variable": "Type of score"
+                 }
+             , height=650)
         figure.update_layout(transition_duration=1)
         return figure
     else :
@@ -217,7 +226,7 @@ def update_output(value):
 
 ############################################################
 
-@callback(Output('acc', 'value'),Output('precision0', 'value'),Output('recall0', 'value'),
+@callback(Output('acc', 'value'),Output('precision0', 'value'),Output('recall0', 'value'),Output('f1', 'value'),
               Input('store-target', 'value'),
               Input('store-split', 'value')
               )
@@ -239,6 +248,7 @@ def update_output(cc,value):
         ac_score = {}
         re_score = {}
         pre_score = {}
+        f1_sc = {}
 
         for i in ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier']:
             if i == 'LogistcRegression' :
@@ -256,10 +266,12 @@ def update_output(cc,value):
                 sc = round(accuracy_score(y_test, y_pred)*100,2)
                 sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
                 sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+                sc2 = round(f1_score(y_test, y_pred, average='macro')*100,2)
 
                 ac_score[i]=sc
                 re_score[i]=sc1
                 pre_score[i]=sc0
+                f1_sc[i]=sc2
 
             elif i == 'RandomForestClassifier' :
                 steps = [
@@ -278,10 +290,12 @@ def update_output(cc,value):
                 sc = round(accuracy_score(y_test, y_pred)*100,2)
                 sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
                 sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+                sc2 = round(f1_score(y_test, y_pred, average='macro')*100,2)
 
                 ac_score[i]=sc
                 re_score[i]=sc1
                 pre_score[i]=sc0
+                f1_sc[i]=sc2
 
             elif i == 'ExtraTreesClassifier' :
                 steps = [
@@ -300,10 +314,12 @@ def update_output(cc,value):
                 sc = round(accuracy_score(y_test, y_pred)*100,2)
                 sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
                 sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+                sc2 = round(f1_score(y_test, y_pred, average='macro')*100,2)
 
                 ac_score[i]=sc
                 re_score[i]=sc1
                 pre_score[i]=sc0
+                f1_sc[i]=sc2
 
             elif i == 'SGDClassifier' :
                 steps = [
@@ -321,11 +337,13 @@ def update_output(cc,value):
                 sc = round(accuracy_score(y_test, y_pred)*100,2)
                 sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
                 sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+                sc2 = round(f1_score(y_test, y_pred, average='macro')*100,2)
 
                 ac_score[i]=sc
                 re_score[i]=sc1
                 pre_score[i]=sc0
+                f1_sc[i]=sc2
                 
-        return ac_score, pre_score, re_score
+        return ac_score, pre_score, re_score, f1_sc
     else :
         raise PreventUpdate

@@ -324,9 +324,9 @@ def update_output(targ,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            sc = round(precision_score(y_test, y_pred, average='macro'),2)
-            sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
-            sc2 = round(accuracy_score(y_test, y_pred)*100,1)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
             
         elif model == 'RandomForestClassifier' :
             steps = [
@@ -342,9 +342,9 @@ def update_output(targ,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            sc = round(precision_score(y_test, y_pred, average='macro'),2)
-            sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
-            sc2 = round(accuracy_score(y_test, y_pred)*100,1)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
 
         elif model == 'ExtraTreesClassifier' :
             steps = [
@@ -360,9 +360,9 @@ def update_output(targ,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            sc = round(precision_score(y_test, y_pred, average='macro'),2)
-            sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
-            sc2 = round(accuracy_score(y_test, y_pred)*100,1)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
 
         elif model == 'SGDClassifier' :
             steps = [
@@ -377,9 +377,9 @@ def update_output(targ,value,model):
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
             y_pred = pr.predict(X_test)
-            sc = round(precision_score(y_test, y_pred, average='macro'),2)
-            sc1 = round(recall_score(y_test, y_pred, average='macro'),2)
-            sc2 = round(accuracy_score(y_test, y_pred)*100,1)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
 
         else :
             raise PreventUpdate
