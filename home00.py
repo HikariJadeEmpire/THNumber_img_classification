@@ -3,7 +3,7 @@ import dash
 import dash_bootstrap_components as dbc
 
 page = [i for i in dash.page_registry.values()]
-print(page)
+
 app = Dash(
     __name__,
     use_pages=True,
