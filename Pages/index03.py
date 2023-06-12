@@ -109,7 +109,7 @@ html.Div([
                         'height':'100px',
                         'margin-left':'10px',
                         'text-align':'center',
-                        'width':'30%',
+                        'width':'32%',
                         'display':'inline-block'
                }
     ),daq.LEDDisplay(
@@ -120,7 +120,7 @@ html.Div([
                         'height':'100px',
                         'margin-left':'10px',
                         'text-align':'center',
-                        'width':'30%',
+                        'width':'32%',
                         'display':'inline-block'
                }
     ),daq.LEDDisplay(
@@ -131,7 +131,7 @@ html.Div([
                         'height':'100px',
                         'margin-left':'10px',
                         'text-align':'center',
-                        'width':'30%',
+                        'width':'32%',
                         'display':'inline-block'
                }
     ),
@@ -180,7 +180,22 @@ dbc.Row([
 
     dbc.Col([
         html.H3(children='Prediction result (By your selected model)'),
-        html.Div(children='Please upload image (.png) to predict',id='text0'),
+        html.Div(children='Please upload image (.png) to predict',id='text0',
+                 style={
+                'height': '100px',
+                }),
+        daq.LEDDisplay(
+            id = "pred",
+            label="Prediction result",
+            labelPosition='bottom',
+            value="0",
+            size=64,
+            color="#FF5E5E",
+            style={
+            'height': '200px',
+        }
+            ),
+
     ], width = 6 )
 ])
 
@@ -611,6 +626,7 @@ def rescale(img):
 ##################################################################################
 
 @callback(Output('text0', 'children'),
+          Output('pred', 'value'),
             Input('select_target2', 'value'),
             Input('slider2', 'value'),
             Input('select_test', 'value'),
@@ -698,7 +714,7 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
         img = pd.DataFrame(img)
 
         result = y_score.predict(img)
-        children = f'Model : {model}\nThe result of \"{list_of_names[0]}\" is : {result[0]}'
-        return children
+        children = f'Model : {model} >> The result of \"{list_of_names[0]}\" is : {result[0]}'
+        return children , result[0]
     else :
         raise PreventUpdate

@@ -66,12 +66,14 @@ dcc.Dropdown(
         options = op ,
         multi=False,
         value=None,
-        clearable=True       
+        clearable=True,
 ),
 html.Div(id='dd-output-container'),
-
 html.Hr()
-]),
+
+], style = {'height':'200px',} ),
+
+
 dbc.Row([
 html.Div(children='select your training number'),
 
@@ -86,7 +88,7 @@ html.Div([daq.LEDDisplay(
         max=100,
         step=10,
         value=100
-    )]),
+    )],style = {'height':'200px',}),
  
 html.Hr()
 ]),
@@ -125,7 +127,7 @@ dcc.Store(id='output-cv2', storage_type='local'),
     Input('output-cv2', 'children')
 )
 def update_output(data,children):
-    if (data is not None) and (children != []) :
+    if (data is not None) and (children is not None) :
         scorr = {}
         for i in data:
             for j in children:
@@ -140,7 +142,7 @@ def update_output(data,children):
           Input('output-cv2', 'children')
 )
 def upd_fig(cc,select):
-    if (cc is not None) and (select != []):
+    if (cc is not None) and (select is not None):
         scor = {}
         for i in cc:
             for j in select:
@@ -176,8 +178,10 @@ def update_output(value):
     Input('my-LED-display-slider-1', 'value')
 )
 def update_led(value):
-    return str(value)
-
+    if value is not None :
+        return str(value)
+    else :
+        raise PreventUpdate
 
 @callback(
     Output('output-cv2', 'children'),
