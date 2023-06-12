@@ -438,7 +438,7 @@ def update_roc(targ,value,model,fg):
                 fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
                 roc_auc[i] = auc(fpr[i], tpr[i])
 
-            # Compute micro-average ROC curve and ROC area
+            # Compute macro-average ROC curve and ROC area
             fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
             roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
 
@@ -465,7 +465,7 @@ def update_roc(targ,value,model,fg):
                 fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
                 roc_auc[i] = auc(fpr[i], tpr[i])
 
-            # Compute micro-average ROC curve and ROC area
+            # Compute macro-average ROC curve and ROC area
             fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
             roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
             
@@ -491,7 +491,7 @@ def update_roc(targ,value,model,fg):
                 fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
                 roc_auc[i] = auc(fpr[i], tpr[i])
 
-            # Compute micro-average ROC curve and ROC area
+            # Compute macro-average ROC curve and ROC area
             fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
             roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
 
@@ -516,7 +516,7 @@ def update_roc(targ,value,model,fg):
                 fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
                 roc_auc[i] = auc(fpr[i], tpr[i])
 
-            # Compute micro-average ROC curve and ROC area
+            # Compute macro-average ROC curve and ROC area
             fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
             roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
             

@@ -16,7 +16,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 
-from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score
+from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score, auc
 
 import dash_daq as daq
 import pandas as pd
@@ -105,8 +105,12 @@ html.Div(dcc.Dropdown(
 ), style={'padding': 10, 'flex': 1}),
 
 html.Div(children='Please select the models',id='cvscore'),
-dcc.Store(id='output-cv', storage_type='local'),
+
 dcc.Store(id='output-cv2', storage_type='local'),
+
+dcc.Store(id='acc', storage_type='local'),
+dcc.Store(id='precision0', storage_type='local'),
+dcc.Store(id='recall0', storage_type='local'),
 ])
 
 ], width=4 ),
@@ -123,7 +127,7 @@ dcc.Store(id='output-cv2', storage_type='local'),
 
 @callback(
     Output('cvscore', 'children'),
-    Input('output-cv', 'value'),
+    Input('acc', 'value'),
     Input('output-cv2', 'children')
 )
 def update_output(data,children):
@@ -138,21 +142,31 @@ def update_output(data,children):
         raise PreventUpdate
 
 @callback(Output('id2', 'figure'),
-          Input('output-cv', 'value'),
+          Input('acc', 'value'),
+          Input('precision0', 'value'),
+          Input('recall0', 'value'),
           Input('output-cv2', 'children')
 )
-def upd_fig(cc,select):
+def upd_fig(cc,pre,rec,select):
     if (cc is not None) and (select is not None):
-        scor = {}
+
+        ac_scor = {}
+        pre_scor = {}
+        re_scor = {}
+
         for i in cc:
             for j in select:
                 if i==j:
-                    scor[i]=cc[i]
-        cc = {'model':scor.keys(),'acc_score':scor.values()}
+                    ac_scor[i]=cc[i]
+                    pre_scor[i]=pre[i]
+                    re_scor[i]=rec[i]
+
+        cc = {'model':ac_scor.keys(),'accuracy_score':ac_scor.values(), 'precision_score':pre_scor.values(), 'recall_score':re_scor.values()}
         cc = pd.DataFrame(cc)
-        figure = px.bar(cc,x='acc_score',y='model',
-             color='acc_score',
-             labels={'acc_score':'Accuracy score'}, height=400)
+
+        figure = px.bar(cc,x=['accuracy_score','precision_score','recall_score'],y='model', barmode="group"
+                        , text_auto='.2s'
+             , height=400)
         figure.update_layout(transition_duration=1)
         return figure
     else :
@@ -203,7 +217,7 @@ def update_output(value):
 
 ############################################################
 
-@callback(Output('output-cv', 'value'),
+@callback(Output('acc', 'value'),Output('precision0', 'value'),Output('recall0', 'value'),
               Input('store-target', 'value'),
               Input('store-split', 'value')
               )
@@ -222,7 +236,10 @@ def update_output(cc,value):
             df = None
             X_train, X_test, y_train, y_test = None
 
-        score = {}
+        ac_score = {}
+        re_score = {}
+        pre_score = {}
+
         for i in ['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier']:
             if i == 'LogistcRegression' :
                 steps = [
@@ -236,9 +253,14 @@ def update_output(cc,value):
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
                 y_pred = pr.predict(X_test)
-                sc = round(accuracy_score(y_test, y_pred)*100,1)
+                sc = round(accuracy_score(y_test, y_pred)*100,2)
+                sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
+                sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
 
-                score['LogistcRegression']=sc
+                ac_score[i]=sc
+                re_score[i]=sc1
+                pre_score[i]=sc0
+
             elif i == 'RandomForestClassifier' :
                 steps = [
                 ('scalar', MinMaxScaler()),
@@ -253,9 +275,15 @@ def update_output(cc,value):
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
                 y_pred = pr.predict(X_test)
-                sc = round(accuracy_score(y_test, y_pred)*100,1)
+                sc = round(accuracy_score(y_test, y_pred)*100,2)
+                sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
+                sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
 
-                score['RandomForestClassifier']=sc
+                ac_score[i]=sc
+                re_score[i]=sc1
+                pre_score[i]=sc0
+
+            elif i == 'ExtraTreesClassifier' :
                 steps = [
                 ('scalar', MinMaxScaler()),
                 ('ExtraTreesClassifier',ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
@@ -269,9 +297,14 @@ def update_output(cc,value):
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
                 y_pred = pr.predict(X_test)
-                sc = round(accuracy_score(y_test, y_pred)*100,1)
+                sc = round(accuracy_score(y_test, y_pred)*100,2)
+                sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
+                sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
 
-                score['ExtraTreesClassifier']=sc
+                ac_score[i]=sc
+                re_score[i]=sc1
+                pre_score[i]=sc0
+
             elif i == 'SGDClassifier' :
                 steps = [
                 ('scalar', MinMaxScaler()),
@@ -285,9 +318,14 @@ def update_output(cc,value):
                 pipeline = Pipeline(steps)
                 pr = pipeline.fit(X_train, y_train)
                 y_pred = pr.predict(X_test)
-                sc = round(accuracy_score(y_test, y_pred)*100,1)
+                sc = round(accuracy_score(y_test, y_pred)*100,2)
+                sc0 = round(precision_score(y_test, y_pred, average='macro')*100,2)
+                sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
 
-                score['SGDClassifier']=sc
-        return score
+                ac_score[i]=sc
+                re_score[i]=sc1
+                pre_score[i]=sc0
+                
+        return ac_score, pre_score, re_score
     else :
         raise PreventUpdate
