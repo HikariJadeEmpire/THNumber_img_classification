@@ -550,6 +550,11 @@ def update_roc(targ,value,model,fg):
                         dcc.Graph(figure = fig ,style={'margin-left':'140px','text-align':'center'})],
                         style={'margin-left':'20px','text-align':'center'}
                         )
+    else :
+        return html.Div([html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
+                        html.P(children="The ROC Graph will plot after selecting Y taget and training split")],
+                        style={'margin-left':'20px','text-align':'center'}
+                        )
 
 ##################################################
 ##################   PREDICT   ###################
