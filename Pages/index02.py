@@ -23,6 +23,7 @@ import pandas as pd
 
 try :
     df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+    df = df.iloc[: , 1:] # Drop first column of dataframe
     df = pd.DataFrame(
         OrderedDict([(name, col_data) for (name, col_data) in df.items()])
     )
@@ -206,6 +207,7 @@ def update_output(cc,value):
     if ( cc is not None ) and ( value != '100' ) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            df = df.iloc[: , 1:] # Drop first column of dataframe
             
             x = df.drop(columns=cc)
             y = df[cc]

@@ -10,6 +10,10 @@ import plotly.express as px
 import numpy as np
 import dash_bootstrap_components as dbc
 
+import datetime
+import cv2
+import base64
+
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
@@ -26,6 +30,7 @@ import pandas as pd
 
 try :
     df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+    df = df.iloc[: , 1:] # Drop first column of dataframe
     df = pd.DataFrame(
         OrderedDict([(name, col_data) for (name, col_data) in df.items()])
     )
@@ -58,8 +63,13 @@ html.P("Select Model ( For Testing )", className="control_label"),
         value=None,
         clearable=True,    
 ),
+html.Hr(),
 
-]),
+],style={
+            'height':'150px',
+            'text-align':'center',
+               }
+),
 
 dbc.Row([
 html.P("Select Target (Y column)", className="control_label"),
@@ -70,11 +80,12 @@ html.P("Select Target (Y column)", className="control_label"),
         value=None,
         clearable=True,       
 )
-]),
+], style={'height':'150px','text-align':'center',}),
 
 dbc.Row([
-html.Div(id='output-target'),
+html.Div(children=f'You have select \"{None}\" to be the target column',id='output-target'),
 html.Hr(),
+html.P(children="Please select the amount of training sample (%)"),
 daq.Slider(id='slider2',
     min=0,
     max=100,
@@ -83,9 +94,7 @@ daq.Slider(id='slider2',
     step=10 
 
 ),
-html.Div(id='output-slider'),
-html.Hr(),
-html.Div(children='Please select taget model and training split first',id='select-test-output2'),
+html.Div(children='Please select taget model and training split first',id='output-slider'),
 ], style={'height':'400px','text-align':'center',})
 
     ], width=3 ),
@@ -134,19 +143,58 @@ html.Hr(),
 html.Div(children="The ROC Graph will plot after selecting Y taget and training split",id="roc-grph"),
 ], width=9)
 
+]), html.Hr(),
+
+###########################################################
+####################    PREDICTION  #######################
+###########################################################
+
+dbc.Row([
+    dbc.Col([
+        html.H3(children='IMAGE Prediction'),
+        html.Div(children='Please upload image (.png) to predict'),
+    dcc.Upload(
+        id='upload-img',
+        children=html.Div([
+            'Drag and Drop or ',
+            html.A('Select Files')
+        ]),
+        style={
+            'width': '80%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '40px'
+        },
+        
+        multiple=True
+    ),
+    html.Div(id='output-image-upload'),
+
+    ], width = 6 , style={
+        'textAlign': 'center',
+        } ),
+
+    dbc.Col([
+        html.H3(children='Prediction result (By your selected model)'),
+        html.Div(children='Please upload image (.png) to predict',id='text0'),
+    ], width = 6 )
 ])
 
 # End of dbc_container
 ])
 )
 
-##################################################################################
+###################################################################
 
 @callback(Output('output-target', 'children'),
           Input('select_target2', 'value'))
 def clean_data(cc):
     if cc is not None:
-        return f'You have select : {str(cc)} to be target column'
+        return f'You have select : \"{str(cc)}\" to be the target column'
     else :
         raise PreventUpdate
     
@@ -236,6 +284,7 @@ def update_output(targ,value,model):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            df = df.iloc[: , 1:] # Drop first column of dataframe
             
             x = df.drop(columns=targ)
             y = df[targ]
@@ -340,6 +389,7 @@ def update_roc(targ,value,model,fg):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            df = df.iloc[: , 1:] # Drop first column of dataframe
             
             x = df.drop(columns=targ)
             y = df[targ]
@@ -485,3 +535,170 @@ def update_roc(targ,value,model,fg):
                         dcc.Graph(figure = fig ,style={'margin-left':'140px','text-align':'center'})],
                         style={'margin-left':'20px','text-align':'center'}
                         )
+
+##################################################
+##################   PREDICT   ###################
+##################################################
+
+@callback(Output('output-image-upload', 'children'),
+              Input('upload-img', 'contents'),
+              State('upload-img', 'filename'),
+              State('upload-img', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+        return children
+    
+##################################################################################
+
+def parse_contents(contents, filename, date):
+    return html.Div([
+        html.H5(filename),
+        html.H6(datetime.datetime.fromtimestamp(date)),
+
+        # HTML images accept base64 encoded strings in the same format
+        # that is supplied by the upload
+        html.Img(src=contents),
+        html.Hr(),
+        html.Div('Raw Content'),
+        html.Pre(contents[0:200] + '...', style={
+            'whiteSpace': 'pre-wrap',
+            'wordBreak': 'break-all'
+        })
+    ])
+
+def moveup(img):
+    while True:
+        if np.all(img[0] >= 240):
+            img = img[1:]
+        else:
+            break
+    return img
+
+def movedown(img):
+    while True:
+        if np.all(img[-1] >= 240):
+            img = img[:-1]
+        else:
+            break
+    return img
+
+def moveleft(img):
+    while True:
+        if np.all(img[:, 0] >= 240):
+            img = img[:, 1:]
+        else:
+            break
+    return img
+
+def moveright(img):
+    while True:
+        if np.all(img[:, -1] >= 240):
+            img = img[:, :-1]
+        else:
+            break
+    return img
+
+def rescale(img):
+    img = moveup(img)
+    img = movedown(img)
+    img = moveleft(img)
+    img = moveright(img)
+    return img
+
+##################################################################################
+
+@callback(Output('text0', 'children'),
+            Input('select_target2', 'value'),
+            Input('slider2', 'value'),
+            Input('select_test', 'value'),
+            Input('upload-img', 'contents'),
+            State('upload-img', 'filename'),
+            )
+def update_pred(ytarget,split,model,list_of_contents, list_of_names):
+    if ( ytarget is not None ) and ( split != '100' ) and (model is not None) and (list_of_contents is not None) :
+        try :
+            df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
+            df = df.iloc[: , 1:] # Drop first column of dataframe
+            
+            x = df.drop(columns=ytarget)
+            y = df[ytarget]
+
+            tts = 1-(int(split)/100)
+            X_train, X_test, y_train, y_test = train_test_split( x, y, test_size = tts, random_state = 42, stratify = y )
+            
+        except Exception as e :
+            raise PreventUpdate
+
+        if model == 'LogistcRegression':
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('LogisticRegression',OneVsRestClassifier(LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                            intercept_scaling=1, l1_ratio=None, max_iter=1000,
+                            multi_class='auto', n_jobs=None, penalty='l2',
+                            random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
+                            warm_start=False)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+            
+        elif model == 'RandomForestClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('Randomforest',OneVsRestClassifier(RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                            criterion='gini', max_depth=None, max_features='sqrt',
+                            max_leaf_nodes=None, max_samples=None,
+                            min_impurity_decrease=0.0, min_samples_leaf=1,
+                            min_samples_split=2, min_weight_fraction_leaf=0.0,
+                            n_estimators=100, n_jobs=-1, oob_score=False,
+                            random_state=123, verbose=0, warm_start=False)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+            
+        elif model == 'ExtraTreesClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('ExtraTreesClassifier',OneVsRestClassifier(ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
+                        criterion='gini', max_depth=None, max_features='sqrt',
+                        max_leaf_nodes=None, max_samples=None,
+                        min_impurity_decrease=0.0, min_samples_leaf=1,
+                        min_samples_split=2, min_weight_fraction_leaf=0.0,
+                        n_estimators=100, n_jobs=-1, oob_score=False,
+                        random_state=123, verbose=0, warm_start=False)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+
+        elif model == 'SGDClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('SGDClassifier',OneVsRestClassifier(SGDClassifier(alpha=0.0001, average=False, class_weight=None,
+               early_stopping=False, epsilon=0.1, eta0=0.001, fit_intercept=True,
+               l1_ratio=0.15, learning_rate='optimal', loss='hinge',
+               max_iter=1000, n_iter_no_change=5, n_jobs=-1, penalty='l2',
+               power_t=0.5, random_state=123, shuffle=True, tol=0.001,
+               validation_fraction=0.1, verbose=0, warm_start=False)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+
+        encoded_data = str(list_of_contents[0]).split(',')[1]
+        nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = rescale(img)
+        img = cv2.resize(img, (28, 28))
+        img = img.flatten()
+
+        img = np.array(img).reshape(1,-1)
+        img = pd.DataFrame(img)
+
+        result = y_score.predict(img)
+        children = f'Model : {model}\nThe result of \"{list_of_names[0]}\" is : {result[0]}'
+        return children
+    else :
+        raise PreventUpdate
