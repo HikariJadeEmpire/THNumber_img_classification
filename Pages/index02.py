@@ -5,6 +5,7 @@ from dash import dash_table
 from collections import OrderedDict
 from dash.exceptions import PreventUpdate
 import plotly.express as px
+import dash_bootstrap_components as dbc
 
 from sklearn.model_selection import train_test_split
 
@@ -32,17 +33,34 @@ except Exception as e :
 
 dash.register_page("Train",  path='/Training',
 
-layout = html.Div([ html.Div(children=[
-            html.H4(children='Select your training'),
-            html.Div(children='select Y column & choose trainning number'),
-            html.Hr(),
+layout = dbc.Container([ 
+    dbc.Row([
+        html.H4(children='Select your training'),
+        html.Div(children='select Y column & choose trainning number'),
+        html.Hr(),
 
-dcc.Store(id='store-target', storage_type='local'),
-dcc.Store(id='store-split', storage_type='local'),
+        dcc.Store(id='store-target', storage_type='local'),
+        dcc.Store(id='store-split', storage_type='local')
+        ], style={'height':'100px','text-align':'center',}),
+        
+dbc.Row([
 
+    dbc.Col([
 
-    html.P("Select Target (Y column)", className="control_label"),
-    dcc.Dropdown(
+html.H3(children='Comparing the Accuracy Scores of Different Models (Bar Plot)'),
+html.Div(children='Select a model'),
+
+    dcc.Graph(
+        id='id2',
+        figure = {},
+    ),
+], width=8 ),
+
+    dbc.Col([
+        
+        dbc.Row([
+html.P("Select Target (Y column)", className="control_label"),
+dcc.Dropdown(
         id="select_target",
         options = op ,
         multi=False,
@@ -51,7 +69,9 @@ dcc.Store(id='store-split', storage_type='local'),
 ),
 html.Div(id='dd-output-container'),
 
-html.Hr(),
+html.Hr()
+]),
+dbc.Row([
 html.Div(children='select your training number'),
 
 html.Div([daq.LEDDisplay(
@@ -65,9 +85,12 @@ html.Div([daq.LEDDisplay(
         max=100,
         step=10,
         value=100
-    )])
-]), 
-html.Hr(),
+    )]),
+ 
+html.Hr()
+]),
+
+dbc.Row([
 
 html.Div(children='select tools for Cross Validation'),
 html.Div(dcc.Dropdown(
@@ -81,21 +104,17 @@ html.Div(dcc.Dropdown(
 html.Div(children='Please select the models',id='cvscore'),
 dcc.Store(id='output-cv', storage_type='local'),
 dcc.Store(id='output-cv2', storage_type='local'),
-html.Hr(),
+])
 
- html.Div(children=[
-            html.H3(children='Comparing the Accuracy Scores of Different Models (Bar Plot)'),
+], width=4 ),
 
-            html.Div(children='Select a model'),
+]),
 
-            dcc.Graph(
-                id='id2',
-                figure = {},
-            )
-        ], style={'padding': 10, 'flex': 1}),
+# End of dbc_container
 
 ])
 )
+
 
 ##################################################################################
 

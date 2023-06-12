@@ -8,6 +8,7 @@ import dash_daq as daq
 import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
+import dash_bootstrap_components as dbc
 
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
@@ -35,7 +36,16 @@ except Exception as e :
 
 dash.register_page("Test",  path='/Testing',
 
-layout = html.Div([html.Div(children=[
+layout = dbc.Container([
+    dbc.Row([
+        html.H4(children='Select your testing'),
+        html.Div(children='select Y column & choose trainning number'),
+        html.Hr(),
+        ], style={'height':'100px','text-align':'center',}),
+
+    dbc.Row([
+        dbc.Col([
+        dbc.Row([
 
     dcc.Store(id='store-target2', storage_type='local'),
     dcc.Store(id='store-split2', storage_type='local'),
@@ -46,17 +56,23 @@ html.P("Select Model ( For Testing )", className="control_label"),
         options=['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier'],
         multi=False,
         value=None,
-        clearable=True,        
+        clearable=True,    
 ),
-html.Hr(),
+
+]),
+
+dbc.Row([
 html.P("Select Target (Y column)", className="control_label"),
     dcc.Dropdown(
         id="select_target2",
         options = op ,
         multi=False,
         value=None,
-        clearable=True       
-),
+        clearable=True,       
+)
+]),
+
+dbc.Row([
 html.Div(id='output-target'),
 html.Hr(),
 daq.Slider(id='slider2',
@@ -64,12 +80,17 @@ daq.Slider(id='slider2',
     max=100,
     value=100,
     handleLabel={"showCurrentValue": True,"label": "VALUE"},
-    step=10,
+    step=10 
 
 ),
 html.Div(id='output-slider'),
 html.Hr(),
 html.Div(children='Please select taget model and training split first',id='select-test-output2'),
+], style={'height':'400px','text-align':'center',})
+
+    ], width=3 ),
+
+dbc.Col([
 html.Div([
     daq.LEDDisplay(
         id='precision',
@@ -111,8 +132,11 @@ html.Div([
 dcc.Store(id='store-score', storage_type='local'),
 html.Hr(),
 html.Div(children="The ROC Graph will plot after selecting Y taget and training split",id="roc-grph"),
+], width=9)
 
 ])
+
+# End of dbc_container
 ])
 )
 
@@ -457,4 +481,7 @@ def update_roc(targ,value,model,fg):
         )
             
         return html.Div([html.H3(children='Multiclass ROC Curve'),
-                dcc.Graph(figure = fig)])
+                         html.P(children=model),
+                        dcc.Graph(figure = fig ,style={'margin-left':'20px','text-align':'center'})],
+                        style={'margin-left':'20px','text-align':'center'}
+                        )
