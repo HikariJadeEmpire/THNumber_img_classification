@@ -8,7 +8,7 @@
 # <h3> Topics </h3>
 สำหรับ Project นี้ เราจะแบ่งออกเป็น 2 หัวข้อ ได้แก่ <br>
 
->- [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml)
+>- [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml)
 >- การทำ Application :toolbox::wrench:
 
 โดยจะเริ่มหัวข้อตามลำดับ <br>
