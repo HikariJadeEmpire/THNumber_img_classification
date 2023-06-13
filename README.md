@@ -1,7 +1,7 @@
 # THNumber_img_classification ( without Deep Learning )
 :pushpin: **Goal** :fire: : <br>
 >การสอน computer ให้สามารถแยกแยะรูปภาพของเลขไทย ซึ่งเขียนด้วยลายมือ :crayon: ( ขนาด 28x28 pixels ) ว่าเป็นเลขอะไร <br>
->ด้วยการใช้เครื่องมือ Machine Learning ( โดยที่ **ไม่** มีการใช้ Neural Network หรือ Deep learning ในการ Train ) <br> 
+>ด้วยการใช้เครื่องมือ *Machine Learning* ( โดยที่ **ไม่** มีการใช้ Neural Network หรือ Deep learning ในการ Train ) <br> 
 >
 >และสร้าง Application :toolbox::wrench: สำหรับคนที่ไม่สามารถเขียน Code ในการทำ Machine Learning (ML) ดังกล่าว ให้สามารถ Train Machine Learning ผ่าน App ได้ <br>
 
@@ -27,7 +27,17 @@
 
 จากนั้นเราจะทำการ Clean DATA :broom: ด้วยวิธีการ <br>
 ตัดขอบภาพ >> แปลงเป็นภาพ ขาว-ดำ >> ทำการ Rescale ให้เป็น 28x28 pixels เหมือนตอนเริ่มต้น >> รวบรวม DATA แล้ว Transform ให้เป็น **.CSV** File <br>
+  
+<h4>.CSV File EXAMPLE : </h4>
+  
+![Capture](https://github.com/HikariJadeEmpire/THNumber_img_classification/assets/118663358/fd2af6c3-fbc8-4fa7-b6f0-7a3e211567b3)
 
 # <h4>STEP 2</h4>
 ขั้นตอนต่อจากนี้ เราจะทำการ **Cross Validation** ด้วยการใช้  [Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) <br>
 เพื่อค้นหา Model ที่มี Score โดยเฉลี่ยสูงที่สุด 3-5 อันดับแรก :trophy: แล้วนำไปปรับ ( Tune Model ) เพื่อนำไปใช้ในการ Train & Test ในขั้นตอนสุดท้าย <br>
+  
+[Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) score :
+  
+![Capture](https://github.com/HikariJadeEmpire/THNumber_img_classification/assets/118663358/c8273361-9896-4e79-b99f-6def97e44560)
+  
+  
