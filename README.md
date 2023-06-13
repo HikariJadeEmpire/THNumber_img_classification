@@ -59,6 +59,13 @@
   
   *NOTE :* ลำดับของ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train
   
+  <h4>PLOT : Extra Trees Classifier :deciduous_tree:</h4>
+  
+  ![output0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/f8e9580a-dd9d-4307-930d-0edcd7bcb94e)
+  
+  ![output1](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/c87ddd5e-273f-4388-b14c-383e2fe047cb)
+
+  
   # <h4>STEP 3</h4>
   Train & Test :books: <br>
   <br>
