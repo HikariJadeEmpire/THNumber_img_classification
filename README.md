@@ -43,6 +43,10 @@
 จากนั้นเราจะทำการ Clean DATA :broom: ด้วยวิธีการ <br>
 ตัดขอบภาพ >> แปลงเป็นภาพ ขาว-ดำ >> ทำการ Rescale ให้เป็น 28x28 pixels เหมือนตอนเริ่มต้น >> รวบรวม DATA แล้ว Transform ให้เป็น **.CSV** File <br>
   
+  **Rescale** EXAMPLE :
+  
+![Ud-1](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/c24388bb-a872-45cf-bf93-63d095a577e9)
+  
 **.CSV** File EXAMPLE :
   
 ![Capture](https://github.com/HikariJadeEmpire/THNumber_img_classification/assets/118663358/fd2af6c3-fbc8-4fa7-b6f0-7a3e211567b3)
