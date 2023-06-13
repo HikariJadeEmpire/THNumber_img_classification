@@ -9,7 +9,7 @@
 สำหรับ Project นี้ เราจะแบ่งออกเป็น 2 หัวข้อ ได้แก่ <br>
 
 >- [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml)
->- การทำ Application :toolbox::wrench:
+>- [การทำ Application :toolbox::wrench:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-application-toolboxwrench)
 
 โดยจะเริ่มหัวข้อตามลำดับ <br>
 
@@ -55,5 +55,27 @@
   
 ![cap0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/aa3d9c75-a53b-4b92-9723-7f388194c5d9)
 
+  # <h4>STEP 3</h4>
+  Train & Test :books: <br>
+  <br>
+  
+  ใน STEP นี้ เราจะนำ Model ที่มี Score เฉลี่ยดีที่สุด มาใช้ในการ Train & Test :books: โดยอาศัย Setting เดียวกันกับขั้นตอน **Cross Validation** <br>
+  ซึ่ง Model ที่ได้มาก็คือ : **Extra Trees Classifier** :deciduous_tree:<br>
+  
+  ผลลัพธ์ที่ได้จากการ Test : **Extra Trees Classifier Model** :deciduous_tree: ได้ผลลัพธ์ออกมาดังนี้ : <br>
+  <br>
+  
+  <img width="476" alt="Screenshot 2566-06-13 at 16 34 46" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/fa1319d0-b7c5-4224-bf1c-3be210337f91">
+
+  <br>
+  <br>
+  จาก Score ด้านบน จะพบว่าคะแนนที่ได้จากการ Test ค่อนข้างดีเยี่ยม โดยจะมีความแม่นยำอยู่ที่ราวๆ 90 % - 100 % <br>
+  
+  # <h3>การทำ Application :toolbox::wrench:</h3>
+  
+  สำหรับหัวข้อนี้ เราจะอธิบายไปทีละ Page โดยอาศัยวิธีการในการ Clean DATA :broom: และ Train & Test <br>
+  แบบเดียวกันกับ หัวข้อ : [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml) <br>
+  
+  
   
   
