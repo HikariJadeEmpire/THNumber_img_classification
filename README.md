@@ -50,13 +50,22 @@
 # <h4>STEP 2</h4>
 ขั้นตอนต่อจากนี้ เราจะทำการ **Cross Validation** ด้วยการใช้  [Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) <br>
 เพื่อค้นหา Model ที่มี Score โดยเฉลี่ยสูงที่สุด 3-5 อันดับแรก :trophy: แล้วนำไปปรับ ( Tune Model ) เพื่อนำไปใช้ในการ Train & Test ในขั้นตอนสุดท้าย <br>
-
-*NOTE :* ลำดับของ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train
   
 [Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) score :
   
 ![cap0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/aa3d9c75-a53b-4b92-9723-7f388194c5d9)
 
+  <br>
+  
+  *NOTE :* ลำดับของ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train
+  
+  <h4>PLOT : Extra Trees Classifier :deciduous_tree:</h4>
+  
+  ![output0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/f8e9580a-dd9d-4307-930d-0edcd7bcb94e)
+  
+  ![output1](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/c87ddd5e-273f-4388-b14c-383e2fe047cb)
+
+  
   # <h4>STEP 3</h4>
   Train & Test :books: <br>
   <br>
@@ -74,7 +83,11 @@
   จาก Score ด้านบน จะพบว่าคะแนนที่ได้จากการ Test ค่อนข้างดีเยี่ยม โดยจะมีความแม่นยำอยู่ที่ราวๆ 90 % - 100 % <br>
   <br>
   
-  *NOTE :* Score และ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train <br>
+*NOTE :* Score และ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train <br>
+  
+  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
+  
+  
   
   # <h3>การทำ Application :toolbox::wrench:</h3>
   
@@ -132,4 +145,19 @@
   ลักษณะหน้าตาของ *Page 3 : TEST & PREDICT*
   <br>
   
+  <img width="670" alt="Screenshot 2566-06-13 at 21 12 29" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/364d3806-377a-45eb-b220-7372bae568f3">
+
+  <br>
+  <br>
+  สำหรับใน 3️⃣ PAGE 3 จะเป็น #️⃣ Page ที่มีหน้าที่สำหรับการ Test & Predict model <br>
   
+  โดยจะมีการปรับ >> ตั้งค่า Model ให้เหมาะสม ตาม Model ที่ได้ทำการเลือกมาแล้วจาก  *Page 2 : TRAIN* 
+  <br><br>
+  เมื่อตั้งค่าต่างๆเสร็จแล้ว :heavy_check_mark: ก็จะมี Scores ต่างๆ ( Precision, Recall, Accuracy ) แสดงขึ้นมา พร้อมกับ ROC Graph <br>
+  ซึ่งเราสามารถใช้ Function บริเวณด้านล่าง ( **IMAGE Prediction** ) ในการ Upload :outbox_tray: รูปภาพของตัวเลขไทย ซึ่งเขียนด้วยลายมือ :crayon: ( ขนาด 28x28 pixels ) ที่เราได้ทำการเขียนขึ้นมาใหม่ ( เช่น เขียนขึ้นโดยโปรแกรม Paint ) ซึ่งจะเป็นตัวเลขอะไรก็ได้ระหว่าง 0-9 <br>
+  
+  โดยในท้ายที่สุด ก็จะมีการแสดงผลลัพธ์ออกมาที่ Function บริเวณมุมขวาล่าง ( ตัวเลขสีแดง ) พร้อมกับข้อความที่บอกว่า ตัวเลขที่ Upload :outbox_tray: เข้ามาคือตัวเลขอะไร 
+  <br>
+  
+  # 
+  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
