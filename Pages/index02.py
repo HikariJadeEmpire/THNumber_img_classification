@@ -169,7 +169,7 @@ def upd_fig(cc,pre,rec,f1,select):
         cc = pd.DataFrame(cc)
 
         figure = px.bar(cc,x=['accuracy_score','precision_score','recall_score','f1_score(macro)'],y='model', barmode="group"
-                        , text_auto='.2s',title="Comparing model score",
+                        , text_auto='.2s',title="Comparing model score ( MACRO-Average )",
                         labels={
                      "model": "Classification Model",
                      "value": "Score",
