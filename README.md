@@ -1,4 +1,4 @@
-# THNumber_img_classification ( without Deep Learning )
+# 🛠️ THNumber_img_classification ( without Deep Learning )
 :pushpin: **Goal** :fire: : <br>
 >การสอน computer ให้สามารถแยกแยะรูปภาพของเลขไทย ซึ่งเขียนด้วยลายมือ :crayon: ( ขนาด 28x28 pixels ) ว่าเป็นเลขอะไร <br>
 >ด้วยการใช้เครื่องมือ *Machine Learning* ( โดยที่ **ไม่** มีการใช้ Neural Network หรือ Deep learning ในการ Train ) <br> 
@@ -76,9 +76,27 @@
   
   # <h3>การทำ Application :toolbox::wrench:</h3>
   
+  Tools for Developing Applications :<br> 
+  
+  [![](https://img.shields.io/badge/code-python3.9-green?style=f?style=flat-square&logo=python&logoColor=white&color=2bbc8a)](https://www.python.org/)
+  [![](https://img.shields.io/badge/tools-dash-green?style=f?style=flat-square&logo=plotly&logoColor=white&color=2bbc8a)](https://dash.plotly.com/)
+  [![](https://img.shields.io/badge/tools-SkLearn-green?style=f?style=flat-square&logo=scikitlearn&logoColor=white&color=2bbc8a)](https://scikit-learn.org/stable/)
+  
+  
   สำหรับหัวข้อนี้ เราจะอธิบายไปทีละ Page โดยอาศัยวิธีการในการ Clean DATA :broom: และ Train & Test <br>
   แบบเดียวกันกับหัวข้อ : [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml) ในระบบหลังบ้าน <br>
   
+  ก่อนอื่น เราจะเริ่มด้วยการเปิดใช้งาน App แบบ local โดย ***run*** >> 
+  ['home00.py'](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/blob/main/home00.py) 
+  ทั้ง file ด้วย python <br>
+  แล้วกดเข้าไปที่ *link* ซึ่งได้จากการ run file ดังกล่าว <br>
+  
+  # <h4> :one: PAGE 1</h4>
+  
+  ลักษณะหน้าตาของ *Page 1 : Home ( Importing data )*
+  
+  <img width="996" alt="Screenshot 2566-06-13 at 19 07 44" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/4a5ec0e5-7573-4666-b5ee-69a15d7c62b7">
+
   
   
   
