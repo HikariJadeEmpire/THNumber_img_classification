@@ -97,6 +97,11 @@
   
   <img width="996" alt="Screenshot 2566-06-13 at 19 07 44" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/4a5ec0e5-7573-4666-b5ee-69a15d7c62b7">
 
+  <br>
+  <br>
+  
+  สำหรับหน้าแรก จะมีไว้สำหรับ import **.CSV** file เพื่อการนำไปใช้งาน <br>
+  เมื่อ Upload หรือ import เสร็จเรียบร้อยแล้ว ตรงที่เขียนว่า *"No files yet!"* ก็จะเปลี่ยนเป็น *df_00.csv"* ( เป็นชื่อที่ถูกกำหนดไว้ ไม่ว่าจะ Upload file ชื่อใดๆมาก็ตาม ) <br>
   
   
   
