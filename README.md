@@ -35,9 +35,12 @@
 # <h4>STEP 2</h4>
 ขั้นตอนต่อจากนี้ เราจะทำการ **Cross Validation** ด้วยการใช้  [Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) <br>
 เพื่อค้นหา Model ที่มี Score โดยเฉลี่ยสูงที่สุด 3-5 อันดับแรก :trophy: แล้วนำไปปรับ ( Tune Model ) เพื่อนำไปใช้ในการ Train & Test ในขั้นตอนสุดท้าย <br>
+
+*NOTE :* ลำดับของ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train
   
 [Pycaret :triangular_flag_on_post:](https://pycaret.gitbook.io/docs/) score :
   
-![Capture](https://github.com/HikariJadeEmpire/THNumber_img_classification/assets/118663358/c8273361-9896-4e79-b99f-6def97e44560)
+![cap0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/aa3d9c75-a53b-4b92-9723-7f388194c5d9)
+
   
   
