@@ -25,6 +25,8 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import roc_curve, recall_score, precision_score,accuracy_score, auc
+import lightgbm as lgb
+from sklearn.neighbors import KNeighborsClassifier
 
 import pandas as pd
 
@@ -58,7 +60,7 @@ layout = dbc.Container([
 html.P("Select Model ( For Testing )", className="control_label"),
     dcc.Dropdown(
         id="select_test",
-        options=['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier'],
+        options=['LogistcRegression', 'RandomForestClassifier', 'ExtraTreesClassifier','SGDClassifier','LGBMClassifier','KNeighborsClassifier'],
         multi=False,
         value=None,
         clearable=True,    
@@ -316,10 +318,10 @@ def update_output(targ,value,model):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('LogisticRegression',LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
-                            intercept_scaling=1, l1_ratio=None, max_iter=1000,
-                            multi_class='auto', n_jobs=None, penalty='l2',
-                            random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
-                            warm_start=False))
+                    intercept_scaling=1, l1_ratio=None, max_iter=1000,
+                    multi_class='auto', n_jobs=None, penalty='l2',
+                    random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
+                    warm_start=False))
                             ]
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
@@ -350,12 +352,12 @@ def update_output(targ,value,model):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('ExtraTreesClassifier',ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
-                        criterion='gini', max_depth=None, max_features='sqrt',
-                        max_leaf_nodes=None, max_samples=None,
-                        min_impurity_decrease=0.0, min_samples_leaf=1,
-                        min_samples_split=2, min_weight_fraction_leaf=0.0,
-                        n_estimators=100, n_jobs=-1, oob_score=False,
-                        random_state=123, verbose=0, warm_start=False))
+                      criterion='gini', max_depth=None, max_features='sqrt',
+                      max_leaf_nodes=None, max_samples=None,
+                      min_impurity_decrease=0.0, min_samples_leaf=1,
+                      min_samples_split=2, min_weight_fraction_leaf=0.0,
+                      n_estimators=100, n_jobs=-1, oob_score=False,
+                      random_state=123, verbose=0, warm_start=False))
                             ]
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
@@ -373,6 +375,37 @@ def update_output(targ,value,model):
                max_iter=1000, n_iter_no_change=5, n_jobs=-1, penalty='l2',
                power_t=0.5, random_state=123, shuffle=True, tol=0.001,
                validation_fraction=0.1, verbose=0, warm_start=False))
+                            ]
+            pipeline = Pipeline(steps)
+            pr = pipeline.fit(X_train, y_train)
+            y_pred = pr.predict(X_test)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
+
+        elif model == 'LGBMClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('LGBMClassifier',lgb.LGBMClassifier(boosting_type='gbdt', class_weight=None, colsample_bytree=1.0,
+                importance_type='split', learning_rate=0.1, max_depth=-1,
+                min_child_samples=20, min_child_weight=0.001, min_split_gain=0.0,
+                n_estimators=100, n_jobs=-1, num_leaves=31, objective=None,
+                random_state=123, reg_alpha=0.0, reg_lambda=0.0, silent='warn',
+                subsample=1.0, subsample_for_bin=200000, subsample_freq=0))
+                            ]
+            pipeline = Pipeline(steps)
+            pr = pipeline.fit(X_train, y_train)
+            y_pred = pr.predict(X_test)
+            sc = round(precision_score(y_test, y_pred, average='macro')*100,2)
+            sc1 = round(recall_score(y_test, y_pred, average='macro')*100,2)
+            sc2 = round(accuracy_score(y_test, y_pred)*100,2)
+
+        elif model == 'KNeighborsClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('KNeighborsClassifier',KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+                      metric_params=None, n_jobs=-1, n_neighbors=5, p=2,
+                      weights='uniform'))
                             ]
             pipeline = Pipeline(steps)
             pr = pipeline.fit(X_train, y_train)
@@ -422,10 +455,10 @@ def update_roc(targ,value,model,fg):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('LogisticRegression',OneVsRestClassifier(LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
-                            intercept_scaling=1, l1_ratio=None, max_iter=1000,
-                            multi_class='auto', n_jobs=None, penalty='l2',
-                            random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
-                            warm_start=False)))
+                    intercept_scaling=1, l1_ratio=None, max_iter=1000,
+                    multi_class='auto', n_jobs=None, penalty='l2',
+                    random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
+                    warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train).decision_function(X_test)
@@ -473,12 +506,12 @@ def update_roc(targ,value,model,fg):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('ExtraTreesClassifier',OneVsRestClassifier(ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
-                        criterion='gini', max_depth=None, max_features='sqrt',
-                        max_leaf_nodes=None, max_samples=None,
-                        min_impurity_decrease=0.0, min_samples_leaf=1,
-                        min_samples_split=2, min_weight_fraction_leaf=0.0,
-                        n_estimators=100, n_jobs=-1, oob_score=False,
-                        random_state=123, verbose=0, warm_start=False)))
+                      criterion='gini', max_depth=None, max_features='sqrt',
+                      max_leaf_nodes=None, max_samples=None,
+                      min_impurity_decrease=0.0, min_samples_leaf=1,
+                      min_samples_split=2, min_weight_fraction_leaf=0.0,
+                      n_estimators=100, n_jobs=-1, oob_score=False,
+                      random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train).predict(X_test)
@@ -520,6 +553,53 @@ def update_roc(targ,value,model,fg):
             fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
             roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
             
+        elif model == 'LGBMClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('LGBMClassifier',OneVsRestClassifier(lgb.LGBMClassifier(boosting_type='gbdt', class_weight=None, colsample_bytree=1.0,
+                importance_type='split', learning_rate=0.1, max_depth=-1,
+                min_child_samples=20, min_child_weight=0.001, min_split_gain=0.0,
+                n_estimators=100, n_jobs=-1, num_leaves=31, objective=None,
+                random_state=123, reg_alpha=0.0, reg_lambda=0.0, silent='warn',
+                subsample=1.0, subsample_for_bin=200000, subsample_freq=0)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
+            # Compute ROC curve and ROC area for each class
+            fpr = dict()
+            tpr = dict()
+            roc_auc = dict()
+
+            for i in range(n_classes):
+                fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+                roc_auc[i] = auc(fpr[i], tpr[i])
+
+            # Compute macro-average ROC curve and ROC area
+            fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+            roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
+
+        elif model == 'KNeighborsClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('KNeighborsClassifier',OneVsRestClassifier(KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+                      metric_params=None, n_jobs=-1, n_neighbors=5, p=2,
+                      weights='uniform')))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train).predict(X_test)
+            # Compute ROC curve and ROC area for each class
+            fpr = dict()
+            tpr = dict()
+            roc_auc = dict()
+
+            for i in range(n_classes):
+                fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+                roc_auc[i] = auc(fpr[i], tpr[i])
+
+            # Compute macro-average ROC curve and ROC area
+            fpr["macro"], tpr["macro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+            roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
+
         else :
             raise PreventUpdate
         
@@ -657,10 +737,10 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('LogisticRegression',OneVsRestClassifier(LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
-                            intercept_scaling=1, l1_ratio=None, max_iter=1000,
-                            multi_class='auto', n_jobs=None, penalty='l2',
-                            random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
-                            warm_start=False)))
+                    intercept_scaling=1, l1_ratio=None, max_iter=1000,
+                    multi_class='auto', n_jobs=None, penalty='l2',
+                    random_state=123, solver='lbfgs', tol=0.0001, verbose=0,
+                    warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train)
@@ -683,12 +763,12 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
             steps = [
                 ('scalar', MinMaxScaler()),
                 ('ExtraTreesClassifier',OneVsRestClassifier(ExtraTreesClassifier(bootstrap=False, ccp_alpha=0.0, class_weight=None,
-                        criterion='gini', max_depth=None, max_features='sqrt',
-                        max_leaf_nodes=None, max_samples=None,
-                        min_impurity_decrease=0.0, min_samples_leaf=1,
-                        min_samples_split=2, min_weight_fraction_leaf=0.0,
-                        n_estimators=100, n_jobs=-1, oob_score=False,
-                        random_state=123, verbose=0, warm_start=False)))
+                      criterion='gini', max_depth=None, max_features='sqrt',
+                      max_leaf_nodes=None, max_samples=None,
+                      min_impurity_decrease=0.0, min_samples_leaf=1,
+                      min_samples_split=2, min_weight_fraction_leaf=0.0,
+                      n_estimators=100, n_jobs=-1, oob_score=False,
+                      random_state=123, verbose=0, warm_start=False)))
                             ]
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train)
@@ -702,6 +782,29 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
                max_iter=1000, n_iter_no_change=5, n_jobs=-1, penalty='l2',
                power_t=0.5, random_state=123, shuffle=True, tol=0.001,
                validation_fraction=0.1, verbose=0, warm_start=False)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+
+        elif model == 'LGBMClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('LGBMClassifier',OneVsRestClassifier(lgb.LGBMClassifier(boosting_type='gbdt', class_weight=None, colsample_bytree=1.0,
+                importance_type='split', learning_rate=0.1, max_depth=-1,
+                min_child_samples=20, min_child_weight=0.001, min_split_gain=0.0,
+                n_estimators=100, n_jobs=-1, num_leaves=31, objective=None,
+                random_state=123, reg_alpha=0.0, reg_lambda=0.0, silent='warn',
+                subsample=1.0, subsample_for_bin=200000, subsample_freq=0)))
+                            ]
+            pipeline = Pipeline(steps)
+            y_score = pipeline.fit(X_train,y_train)
+
+        elif model == 'KNeighborsClassifier' :
+            steps = [
+                ('scalar', MinMaxScaler()),
+                ('KNeighborsClassifier',OneVsRestClassifier(KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+                      metric_params=None, n_jobs=-1, n_neighbors=5, p=2,
+                      weights='uniform')))
                             ]
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train)
