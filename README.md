@@ -76,11 +76,10 @@
   ผลลัพธ์ที่ได้จากการ Test : **Extra Trees Classifier Model** :deciduous_tree: ได้ผลลัพธ์ออกมาดังนี้ : <br>
   <br>
   
-  <img width="476" alt="Screenshot 2566-06-13 at 16 34 46" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/fa1319d0-b7c5-4224-bf1c-3be210337f91">
+  ![cap00](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/84f1edfd-543d-4f00-adfb-ccf99ae36f12)
 
   <br>
-  <br>
-  จาก Score ด้านบน จะพบว่าคะแนนที่ได้จากการ Test ค่อนข้างดีเยี่ยม โดยจะมีความแม่นยำอยู่ที่ราวๆ 90 % - 100 % <br>
+  จาก Score ด้านบน จะพบว่าคะแนนที่ได้จากการ Test ค่อนข้างดีเยี่ยม โดยจะมีความแม่นยำอยู่ที่ราวๆ 81 % - 100 % <br>
   <br>
   
 *NOTE :* Score และ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train <br>
