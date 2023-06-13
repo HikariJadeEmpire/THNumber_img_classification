@@ -78,6 +78,10 @@
   
 *NOTE :* Score และ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train <br>
   
+  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
+  
+  
+  
   # <h3>การทำ Application :toolbox::wrench:</h3>
   
   Tools for Developing Applications :<br> 
@@ -148,4 +152,5 @@
   โดยในท้ายที่สุด ก็จะมีการแสดงผลลัพธ์ออกมาที่ Function บริเวณมุมขวาล่าง ( ตัวเลขสีแดง ) พร้อมกับข้อความที่บอกว่า ตัวเลขที่ Upload :outbox_tray: เข้ามาคือตัวเลขอะไร 
   <br>
   
-  
+  # 
+  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
