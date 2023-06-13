@@ -9,7 +9,7 @@
 สำหรับ Project นี้ เราจะแบ่งออกเป็น 2 หัวข้อ ได้แก่ <br>
 
 >- [การทำ Machine Learning (ML)](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-machine-learning-ml)
->- การทำ Application :toolbox::wrench:
+>- [การทำ Application :toolbox::wrench:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B3-application-toolboxwrench)
 
 โดยจะเริ่มหัวข้อตามลำดับ <br>
 
@@ -67,6 +67,7 @@
   
   <img width="476" alt="Screenshot 2566-06-13 at 16 34 46" src="https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/fa1319d0-b7c5-4224-bf1c-3be210337f91">
 
+  <br>
   <br>
   จาก Score ด้านบน จะพบว่าคะแนนที่ได้จากการ Test ค่อนข้างดีเยี่ยม โดยจะมีความแม่นยำอยู่ที่ราวๆ 90 % - 100 % <br>
   
