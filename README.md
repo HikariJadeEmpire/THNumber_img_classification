@@ -56,6 +56,7 @@
 ![cap0](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/assets/118663358/aa3d9c75-a53b-4b92-9723-7f388194c5d9)
 
   <br>
+  
   *NOTE :* ลำดับของ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train
   
   # <h4>STEP 3</h4>
@@ -138,6 +139,9 @@
   <br>
   <br>
   สำหรับใน 3️⃣ PAGE 3 จะเป็น #️⃣ Page ที่มีหน้าที่สำหรับการ Test & Predict model <br>
-  โดยจะมีการปรับ , ตั้งค่า Model ให้เหมาะสม ตาม Model ที่ได้ทำการเลือกมาแล้วจาก Page 2 : TRAIN <br>
+  โดยจะมีการปรับ >> ตั้งค่า Model ให้เหมาะสม ตาม Model ที่ได้ทำการเลือกมาแล้วจาก *Page 2 : TRAIN* 
+  <br>
   
+  หลังจากนั้นก็จะมี Scores ต่างๆแสดงขึ้นมา พร้อมกับ ROC Graph <br>
+  ซึ่งเราสามารถใช้ Function บริเวณด้านล่าง ในการ Upload 
   
