@@ -28,7 +28,7 @@
 จากนั้นเราจะทำการ Clean DATA :broom: ด้วยวิธีการ <br>
 ตัดขอบภาพ >> แปลงเป็นภาพ ขาว-ดำ >> ทำการ Rescale ให้เป็น 28x28 pixels เหมือนตอนเริ่มต้น >> รวบรวม DATA แล้ว Transform ให้เป็น **.CSV** File <br>
   
-<h4>.CSV File EXAMPLE : </h4>
+**.CSV** File EXAMPLE :
   
 ![Capture](https://github.com/HikariJadeEmpire/THNumber_img_classification/assets/118663358/fd2af6c3-fbc8-4fa7-b6f0-7a3e211567b3)
 
