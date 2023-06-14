@@ -434,7 +434,7 @@ def update_output(targ,value,model):
               State('roc-grph', 'figure')
               )
 def update_roc(targ,value,model,fg):
-    if ( targ is not None ) and ( value != '100' ) and (model is not None) :
+    if ( targ is not None ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
@@ -719,7 +719,7 @@ def rescale(img):
             State('upload-img', 'filename'),
             )
 def update_pred(ytarget,split,model,list_of_contents, list_of_names):
-    if ( ytarget is not None ) and ( split != '100' ) and (model is not None) and (list_of_contents is not None) :
+    if ( ytarget is not None ) and (model is not None) and (list_of_contents is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
