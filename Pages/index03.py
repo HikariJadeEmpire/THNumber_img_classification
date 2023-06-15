@@ -423,8 +423,8 @@ def update_scores(targ,value,model):
         scora['accuracy'] = sc2
         
         return scora
-    else :
-        raise PreventUpdate
+    # else :
+    #     raise PreventUpdate
 
 ##################################################
 ###################   Graph   ####################
