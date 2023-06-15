@@ -422,6 +422,8 @@ def update_output(targ,value,model):
         scora['accuracy'] = sc2
         
         return scora
+    else :
+        raise PreventUpdate
 
 ##################################################
 ###################   Graph   ####################
