@@ -297,11 +297,12 @@ def update_output(value):
               Input('store-split2', 'value'),
               Input('select_test', 'value')
               )
-def update_output(targ,value,model):
+def update_scores(targ,value,model):
     if ( targ is not None ) and ( value != '100' ) and (model is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
+            df = df.sample(frac=1).reset_index(drop=True)
             
             x = df.drop(columns=targ)
             y = df[targ]
@@ -440,6 +441,7 @@ def update_roc(targ,value,model,fg):
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
+            df = df.sample(frac=1).reset_index(drop=True)
             
             x = df.drop(columns=targ)
             y = df[targ]
@@ -725,6 +727,7 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
+            df = df.sample(frac=1).reset_index(drop=True)
             
             x = df.drop(columns=ytarget)
             y = df[ytarget]

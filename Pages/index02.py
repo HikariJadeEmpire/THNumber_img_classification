@@ -232,11 +232,12 @@ def update_output(value):
               Input('store-target', 'value'),
               Input('store-split', 'value')
               )
-def update_output(cc,value):
+def update_score(cc,value):
     if ( cc is not None ) and ( value != '100' ) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
             df = df.iloc[: , 1:] # Drop first column of dataframe
+            df = df.sample(frac=1).reset_index(drop=True)
             
             x = df.drop(columns=cc)
             y = df[cc]
