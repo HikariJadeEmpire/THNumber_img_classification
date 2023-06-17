@@ -205,7 +205,10 @@ dcc.Store(id='store-score', storage_type='local'),
 
 html.Hr(),
 html.H3(children='Average of multiple prediction results (By your selected model)'),
-html.Div(children='Please upload image (.png) to use a multiple prediction results and finding average',id='pred-list',
+html.Div([
+    html.Div(id = 'namelist'),
+    html.Div(children='Please upload image (.png) to use a multiple prediction results and finding average',id='pred-list')
+    ],
                  style={
                 'height': '100px',
                 }),
@@ -727,6 +730,7 @@ def rescale(img):
 
 @callback(Output('text0', 'children'),
           Output('pred', 'value'),
+          Output('namelist', 'children'),
           Output('pred-list', 'children'),
           Output('av', 'children'),
             Input('select_target2', 'value'),
@@ -850,6 +854,6 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
         av = sum(limg)/len(limg)
 
         children = f'Model : {model} >> The result of \"{list_of_names[0]}\" is : {limg[0]}'
-        return children , limg[0] , f'Multiple prediction results : {limg}' , f'The average is : {av}'
+        return children , limg[0] , f'List of image names : {list_of_names}', f'Multiple prediction results : {limg}' , f'The average is : {av}'
     else :
         raise PreventUpdate
