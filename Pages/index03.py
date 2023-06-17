@@ -188,7 +188,7 @@ dbc.Row([
                 }),
         daq.LEDDisplay(
             id = "pred",
-            label="Prediction result",
+            label="Prediction result ( only the first uploaded file )",
             labelPosition='bottom',
             value="0",
             size=64,
@@ -199,7 +199,18 @@ dbc.Row([
             ),
 
     ], width = 6 )
-])
+]),
+
+dcc.Store(id='store-score', storage_type='local'),
+
+html.Hr(),
+html.H3(children='Average of multiple prediction results (By your selected model)'),
+html.Div(children='Please upload image (.png) to use a multiple prediction results and finding average',id='pred-list',
+                 style={
+                'height': '100px',
+                }),
+html.Div(id='av'),
+
 
 # End of dbc_container
 ])
@@ -716,6 +727,8 @@ def rescale(img):
 
 @callback(Output('text0', 'children'),
           Output('pred', 'value'),
+          Output('pred-list', 'children'),
+          Output('av', 'children'),
             Input('select_target2', 'value'),
             Input('slider2', 'value'),
             Input('select_test', 'value'),
@@ -814,20 +827,29 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
             pipeline = Pipeline(steps)
             y_score = pipeline.fit(X_train,y_train)
 
-        encoded_data = str(list_of_contents[0]).split(',')[1]
-        nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        limg = []
+        for i in list_of_contents :
+            encoded_data = str(i).split(',')[1]
+            nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = rescale(img)
-        img = cv2.resize(img, (28, 28))
-        img = img.flatten()
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img = rescale(img)
+            img = cv2.resize(img, (28, 28))
+            img = img.flatten()
 
-        img = np.array(img).reshape(1,-1)
-        img = pd.DataFrame(img)
+            img = np.array(img).reshape(1,-1)
+            img = pd.DataFrame(img)
+            result = y_score.predict(img)
+            limg.append(result[0])
+        
+        # num = ''
+        # for i in limg:
+        #     num += str(i)
 
-        result = y_score.predict(img)
-        children = f'Model : {model} >> The result of \"{list_of_names[0]}\" is : {result[0]}'
-        return children , result[0]
+        av = sum(limg)/len(limg)
+
+        children = f'Model : {model} >> The result of \"{list_of_names[0]}\" is : {limg[0]}'
+        return children , limg[0] , f'Multiple prediction results : {limg}' , f'The average is : {av}'
     else :
         raise PreventUpdate
