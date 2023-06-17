@@ -1,9 +1,9 @@
 # 🛠️ THNumber_img_classification ( without Deep Learning )
 :pushpin: **Goal** :fire: : <br>
 >การสอน computer ให้สามารถแยกแยะรูปภาพของเลขไทย ซึ่งเขียนด้วยลายมือ :crayon: ( ขนาด 28x28 pixels ) ว่าเป็นเลขอะไร <br>
->ด้วยการใช้เครื่องมือ *Machine Learning* ( โดยที่ **ไม่** มีการใช้ Neural Network หรือ Deep learning ในการ Train ) <br> 
+>ด้วยการใช้เครื่องมือ ```Machine Learning``` ( โดยที่ **ไม่** มีการใช้ ```Neural Network``` หรือ ```Deep learning``` ในการ Train ) <br> 
 >
->และสร้าง Application :toolbox::wrench: สำหรับคนที่ไม่สามารถเขียน Code ในการทำ Machine Learning (ML) ดังกล่าว ให้สามารถ Train Machine Learning ผ่าน App ได้ <br>
+>และสร้าง Application :toolbox::wrench: สำหรับคนที่ไม่สามารถเขียน Code ในการทำ ```Machine Learning (ML)``` ดังกล่าว ให้สามารถ Train ```Machine Learning``` ผ่าน App ได้ <br>
 
 # <h3> Topics </h3>
 สำหรับ Project นี้ เราจะแบ่งออกเป็น 2 หัวข้อ ได้แก่ <br>
@@ -24,7 +24,7 @@
 [![](https://img.shields.io/badge/tools-Numpy-green?style=f?style=flat-square&logo=numpy&logoColor=white&color=2bbc8a)](https://numpy.org/)
 [![](https://img.shields.io/badge/OS-Mac-green?style=f?style=flat-square&logo=macos&logoColor=white)](https://www.apple.com/macos/ventura/)
 [![](https://img.shields.io/badge/OS-Windows-green?style=f?style=flat-square&logo=windows&logoColor=white)](https://www.microsoft.com/)
-[![](https://img.shields.io/badge/Git_Update-15_Jun_2023-brightgreen?style=f?style=flat-square&logo=github&logoColor=white)](https://github.com/)
+[![](https://img.shields.io/badge/Git_Update-16_Jun_2023-brightgreen?style=f?style=flat-square&logo=github&logoColor=white)](https://github.com/)
 
 # <h3>การทำ Machine Learning (ML)</h3>
 
@@ -87,8 +87,9 @@
   <br>
   
 *NOTE :* Score และ Model อาจมีการเปลี่ยนแปลง เนื่องจากมีการ Re-sampling DATA ในทุกๆครั้งที่ Train <br>
-  
-  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
+
+  # 
+  Go to top : [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
   
   
   
@@ -163,4 +164,4 @@
   <br>
   
   # 
-  [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
+  Go to top : [Top :compass:](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-#%EF%B8%8F-thnumber_img_classification--without-deep-learning-)
