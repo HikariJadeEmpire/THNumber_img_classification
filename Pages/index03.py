@@ -212,7 +212,24 @@ html.Div([
                  style={
                 'height': '100px',
                 }),
-html.Div(id='av'),
+dbc.Row([
+    dbc.Col([
+        html.P("Select aggregation method", className="control_label"),
+        dcc.Dropdown(
+        id="ch",
+        options=['Mean ( Average )', 'Sum', 'Multiply','Arrange results'],
+        multi=False,
+        value=None,
+        clearable=True,    
+),
+    ], width = 6 ),
+    dbc.Col([
+        html.Div(id='av' ,
+                 style={
+                'textAlign': 'center',
+                } ),
+    ], width = 6 )
+]),
 
 
 # End of dbc_container
@@ -736,10 +753,11 @@ def rescale(img):
             Input('select_target2', 'value'),
             Input('slider2', 'value'),
             Input('select_test', 'value'),
+            Input('ch', 'value'),
             Input('upload-img', 'contents'),
             State('upload-img', 'filename'),
             )
-def update_pred(ytarget,split,model,list_of_contents, list_of_names):
+def update_pred(ytarget,split,model,ch,list_of_contents, list_of_names):
     if ( ytarget is not None ) and (model is not None) and (list_of_contents is not None) :
         try :
             df = pd.read_csv("./Github/ThNumber_img_classification/uploaded/df_00.csv")
@@ -846,14 +864,27 @@ def update_pred(ytarget,split,model,list_of_contents, list_of_names):
             img = pd.DataFrame(img)
             result = y_score.predict(img)
             limg.append(result[0])
-        
-        # num = ''
-        # for i in limg:
-        #     num += str(i)
 
-        av = sum(limg)/len(limg)
+        choice = ['Mean ( Average )', 'Sum', 'Multiply','Arrange results']
+        if ch is None :
+            av = None
+        else :
+            if ch == choice[3] :
+                num = ''
+                for i in limg:
+                    num += str(i)
+            elif ch == choice[0] :
+                num = sum(limg)/len(limg)
+            elif ch == choice[1] :
+                num = sum(limg)
+            elif ch == choice[2] :
+                num = 1
+                for i in limg:
+                    num *= i
+
+            av = num
 
         children = f'Model : {model} >> The result of \"{list_of_names[0]}\" is : {limg[0]}'
-        return children , limg[0] , f'List of image names : {list_of_names}', f'Multiple prediction results : {limg}' , f'The average is : {av}'
+        return children , limg[0] , f'List of image names : {list_of_names}', f'Multiple prediction results : {limg}' , f'The answer is : {av}'
     else :
         raise PreventUpdate
