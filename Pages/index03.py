@@ -204,10 +204,10 @@ dbc.Row([
 dcc.Store(id='store-score', storage_type='local'),
 
 html.Hr(),
-html.H3(children='Average of multiple prediction results (By your selected model)'),
+html.H3(children='Multiple prediction results (By your selected model)'),
 html.Div([
     html.Div(id = 'namelist'),
-    html.Div(children='Please upload image (.png) to use a multiple prediction results and finding average',id='pred-list')
+    html.Div(children='Please upload image (.png) to use a multiple prediction results and performing aggregation',id='pred-list')
     ],
                  style={
                 'height': '100px',
