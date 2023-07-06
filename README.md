@@ -109,6 +109,9 @@
   ['home00.py'](https://github.com/HikariJadeEmpire/THNumber_img_classification-dash_app-/blob/main/home00.py) 
   ทั้ง file ด้วย python <br>
   แล้วกดเข้าไปที่ *link* ซึ่งได้จากการ run file ดังกล่าว <br>
+
+หรือ ทำการทดลองใช้งานผ่าน [ngrok](https://cf1e-49-49-219-232.ngrok-free.app) <br>
+*( วิธีนี้สามารถทดลองใช้งานได้ก็ต่อเมื่อ Host ทำการ Run Original file เอาไว้เท่านั้น )*
   
   # <h4> :one: PAGE 1</h4>
   
